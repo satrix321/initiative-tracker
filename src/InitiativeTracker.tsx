@@ -1,5 +1,5 @@
 import React from 'react';
-import './InitiativeTracker.css';
+import './InitiativeTracker.scss';
 
 class InitiativeTrackerEntry {
   id: number;
@@ -38,17 +38,17 @@ class InitiativeTracker extends React.Component {
     return (
       <div className="InitiativeTracker">
         <div className="InitiativeTracker-header">
-          Initiative Tracker
+          <span className="InitiativeTracker-title">Initiative Tracker</span>
           <button className="InitiativeTracker-button" onClick={this.handleTurn}>Turn</button>
           <button className="InitiativeTracker-button" onClick={this.handleSort}>Sort</button>
           <button className="InitiativeTracker-button" onClick={this.handleClear}>Clear</button>
         </div>
         <div className="InitiativeTracker-body">
-          <table>
+          <table className="InitiativeTracker-table">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Initiative</th>
+                <th align="left">Name</th>
+                <th align="left">Initiative</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -56,8 +56,8 @@ class InitiativeTracker extends React.Component {
           </table>
         </div>
         <div className="InitiativeTracker-footer">
-          <input type="text" placeholder="Name" value={this.state.entryName} onChange={this.setEntryName}></input>
-          <input type="number" placeholder="Initiative" value={this.state.entryInitiative || ''} onChange={this.setEntryInitiative}></input>
+          <input className="InitiativeTracker-input" type="text" placeholder="Name" value={this.state.entryName} onChange={this.setEntryName}></input>
+          <input className="InitiativeTracker-input" type="number" placeholder="Initiative" value={this.state.entryInitiative || ''} onChange={this.setEntryInitiative}></input>
           <button className="InitiativeTracker-button" onClick={this.addEntry}>Add</button>
         </div>
       </div>
@@ -90,40 +90,15 @@ class InitiativeTracker extends React.Component {
 
   addEntry = () => {
     if (this.state.entryName && this.state.entryInitiative) {
-      let tempArray = [...this.state.entries];
-      let smallestInitiative = 0;
-      let biggestInitiative = 0;
-      let indexToInsert = tempArray.findIndex((element, index, array) => {
-        smallestInitiative = index === 0 ? element.initiative : (element.initiative < smallestInitiative ? element.initiative : smallestInitiative);
-        biggestInitiative = element.initiative > biggestInitiative ? element.initiative : biggestInitiative;
-        if (this.state.entryInitiative === element.initiative) {
-          return true;
-        } else if (this.state.entryInitiative > element.initiative) {
-          if (index === 0) {
-            return this.state.entryInitiative < array[array.length - 1].initiative;
-          } else {
-            return this.state.entryInitiative < array[index - 1].initiative;
-          }
-        } else {
-          return false;
-        }
-      });
-
-      if (indexToInsert === -1) {
-        if (this.state.entryInitiative > biggestInitiative) {
-          indexToInsert = tempArray.findIndex((element) => {
-            return element.initiative === biggestInitiative;
-          });
-        } else if (this.state.entryInitiative < smallestInitiative) {
-          indexToInsert = tempArray.findIndex((element) => {
-            return element.initiative === smallestInitiative;
-          }) + 1;
-        } else {
-          indexToInsert = tempArray.length;
+      let tempArray = [...this.state.entries, new InitiativeTrackerEntry(this.idCounter, this.state.entryName, this.state.entryInitiative)];
+      if (this.state.entries.length > 0) {
+        let firstElement = this.state.entries[0];
+        tempArray = this.sortEntries(tempArray);
+        while (tempArray[0].id !== firstElement.id) {
+          let entry = tempArray.shift()!;
+          tempArray.push(entry);
         }
       }
-
-      tempArray.splice(indexToInsert, 0, new InitiativeTrackerEntry(this.idCounter, this.state.entryName, this.state.entryInitiative));
 
       this.setState({
         entries: tempArray,
@@ -155,9 +130,10 @@ class InitiativeTracker extends React.Component {
   handleTurn = () => {
     if (this.state.entries.length > 0) {
       let tempArray = [...this.state.entries];
-      let entry = tempArray.shift();
+      let entry = tempArray.shift()!;
+      tempArray.push(entry);
       this.setState({
-        entries: [...tempArray, entry],
+        entries: tempArray,
       });
     }
   }

@@ -1,0 +1,65 @@
+.InitiativeTracker {
+    margin: 10px;
+    max-width: 400px;
+
+    .InitiativeTracker-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .InitiativeTracker-title {
+            flex-grow: 2;
+            margin: 10px;
+        }
+    }
+    
+    .InitiativeTracker-body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .InitiativeTracker-table {
+            width: calc(100% - 20px);
+            margin: 10px;
+            border-spacing: 0;
+            
+            tbody tr:nth-child(odd) {
+                background-color: rgba(0, 0, 0, 0.1);
+            }
+        }
+    }
+
+    .InitiativeTracker-footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .InitiativeTracker-button {
+        border: none;
+        color: #ffffff;
+        background-color: #454d66;
+        padding: 8px 16px;
+        cursor: pointer;
+        margin: 10px;
+
+        &:hover {
+            background-color: #5e667d;
+        }
+    }
+
+    button::-moz-focus-inner {
+        border: 0;
+    }
+
+    .InitiativeTracker-input {
+        margin: 10px;
+        border: 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+        appearance: textfield;
+
+        &:focus {
+            border-bottom: 1px solid black;
+        }
+    }
+}
