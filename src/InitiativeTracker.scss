@@ -1,5 +1,5 @@
 .InitiativeTracker {
-    margin: 10px;
+    margin: 0.5rem 0.25rem;
     max-width: 1000px;
 
     .InitiativeTracker-header {
@@ -9,7 +9,7 @@
 
         .InitiativeTracker-title {
             flex-grow: 2;
-            margin: 10px;
+            margin: 0.5rem 0.25rem;
         }
     }
     
@@ -19,32 +19,72 @@
         align-items: center;
 
         .InitiativeTracker-table {
-            width: calc(100% - 20px);
-            margin: 10px;
+            width: calc(100% - 0.5rem);
+            margin: 0.5rem 0.25rem;
             border-spacing: 0;
             
             tbody tr:nth-child(odd) {
                 background-color: rgba(0, 0, 0, 0.1);
+            }
+
+            .InitiativeTracker-table-contentWidthColumn {
+                width: 0;
+            }
+
+            .InitiativeTracker-entryActions {
+                display: flex;
+                align-items: center;
+
+                > * {
+                    margin: 0.5rem 0.25rem;
+                }
+
+                .InitiativeTracker-entryActions-arrows {
+                    display: flex;
+                    flex-direction: column;
+                    
+                    .InitiativeTracker-iconButton {
+                        height: 1.25em;
+                        margin: 0;
+                        padding: 0 0.75em;
+                    }
+                }
             }
         }
     }
 
     .InitiativeTracker-footer {
         display: flex;
-        justify-content: center;
+        justify-content: right;
         align-items: center;
     }
 
-    .InitiativeTracker-button {
+    .InitiativeTracker-button,
+    .InitiativeTracker-iconButton {
         border: none;
         color: #ffffff;
         background-color: #454d66;
-        padding: 8px 16px;
+        padding: 0.5em 0.75em;
         cursor: pointer;
-        margin: 10px;
+        margin: 0.5rem 0.25rem;
 
         &:hover {
-            background-color: #5e667d;
+            background-color: rgba(#454d66, 0.85);
+        }
+    }
+
+    .InitiativeTracker-iconButton {
+        padding: 0 0.25em;
+        height: 2.5em;
+        width: 2.5em;
+    }
+
+    .InitiativeTracker-button-clicked,
+    .InitiativeTracker-iconButton-clicked {
+        background-color: #309975;
+
+        &:hover {
+            background-color: rgba(#309975, 0.85);
         }
     }
 
@@ -53,7 +93,7 @@
     }
 
     .InitiativeTracker-input {
-        margin: 10px;
+        margin: 0.5rem 0.25rem;
         border: 0;
         border-bottom: 1px solid rgba(0, 0, 0, 0.5);
         appearance: textfield;

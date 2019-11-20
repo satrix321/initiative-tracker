@@ -1,17 +1,25 @@
 import React from 'react';
 import './InitiativeTracker.scss';
+import { IoIosArrowUp } from "react-icons/io";
+import { IoIosArrowDown } from "react-icons/io";
+import { IoIosClose } from "react-icons/io";
+import { IoIosAdd } from "react-icons/io";
+// import { IoMdCreate } from "react-icons/io";
+import { GiPistolGun } from "react-icons/gi";
 
 class InitiativeTrackerEntry {
   id: number;
   name: string;
   hp: number;
   initiative: number;
+  isGunReady: boolean;
 
   constructor(id: number, name: string, hp: number, initiative: number) {
     this.id = id;
     this.name = name;
     this.hp = hp;
     this.initiative = initiative;
+    this.isGunReady = false;
   }
 }
 
@@ -55,7 +63,7 @@ class InitiativeTracker extends React.Component {
                 <th align="left">Name</th>
                 <th align="left">HP</th>
                 <th align="left">Initiative</th>
-                <th>Actions</th>
+                <th className="InitiativeTracker-table-contentWidthColumn">Actions</th>
               </tr>
             </thead>
             {this.renderEntries()}
@@ -65,7 +73,7 @@ class InitiativeTracker extends React.Component {
           <input className="InitiativeTracker-input" type="text" placeholder="Name" value={this.state.entryName} onChange={this.setEntryName}></input>
           <input className="InitiativeTracker-input" type="number" placeholder="Hp" value={this.state.entryHp || ''} onChange={this.setEntryHp}></input>
           <input className="InitiativeTracker-input" type="number" placeholder="Initiative" value={this.state.entryInitiative || ''} onChange={this.setEntryInitiative}></input>
-          <button className="InitiativeTracker-button" onClick={this.addEntry}>Add</button>
+          <button className="InitiativeTracker-iconButton" onClick={this.addEntry}><IoIosAdd size="2em" /></button>
         </div>
       </div>
     )
@@ -79,11 +87,14 @@ class InitiativeTracker extends React.Component {
             <tr key={entry.id} data-id="{entry.id}">
               <td>{entry.name}</td>
               <td>{entry.hp}</td>
-              <td>{entry.initiative}</td>
-              <td>
-                <button className="InitiativeTracker-button" onClick={this.moveEntryUp.bind(this, entry.id)}>Up</button>
-                <button className="InitiativeTracker-button" onClick={this.moveEntryDown.bind(this, entry.id)}>Down</button>
-                <button className="InitiativeTracker-button" onClick={this.removeEntry.bind(this, entry.id)}>Remove</button>
+              <td>{entry.isGunReady ? `${entry.initiative} (+50)` : entry.initiative}</td>
+              <td className="InitiativeTracker-entryActions">
+                <button className={`InitiativeTracker-iconButton ${entry.isGunReady ? "InitiativeTracker-iconButton-clicked" : ""}`} onClick={this.toggleGun.bind(this, entry.id)}><GiPistolGun size="1.5em" /></button>
+                <span className="InitiativeTracker-entryActions-arrows">
+                  <button className="InitiativeTracker-iconButton" onClick={this.moveEntryUp.bind(this, entry.id)}><IoIosArrowUp /></button>
+                  <button className="InitiativeTracker-iconButton" onClick={this.moveEntryDown.bind(this, entry.id)}><IoIosArrowDown /></button>
+                </span>
+                <button className="InitiativeTracker-iconButton" onClick={this.removeEntry.bind(this, entry.id)}><IoIosClose size="2em" /></button>
               </td>
             </tr>
           ))
@@ -129,11 +140,20 @@ class InitiativeTracker extends React.Component {
   sortEntries = (entries: InitiativeTrackerEntry[]) => {
     if (entries.length > 0) {
       return [...entries].sort((firstEntry: InitiativeTrackerEntry, secondEntry: InitiativeTrackerEntry) => {
-        return secondEntry.initiative - firstEntry.initiative;
+        return (secondEntry.initiative + (secondEntry.isGunReady ? 50 : 0)) - (firstEntry.initiative + (firstEntry.isGunReady ? 50 : 0));
       });
     } else {
       return entries;
     }
+  }
+
+  toggleGun(id: number) {
+    let tempArray = [...this.state.entries];
+    let entry = tempArray.find((entry: InitiativeTrackerEntry) => {
+      return entry.id === id;
+    })!;
+    entry.isGunReady = !entry.isGunReady;
+    this.setState({ entries: tempArray });
   }
 
   moveEntryUp(id: number) {
