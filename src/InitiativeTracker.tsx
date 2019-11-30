@@ -73,7 +73,7 @@ class InitiativeTracker extends React.Component {
           <table className="InitiativeTracker-table" cellPadding="0">
             <thead>
               <tr>
-                <th align="left" className="InitiativeTracker-table-name">Name</th>
+                <th align="left">Name</th>
                 <th align="left" className="InitiativeTracker-table-hp">HP</th>
                 <th align="left" className="InitiativeTracker-table-initiative">Initiative</th>
                 <th className="InitiativeTracker-table-actions">Actions</th>
