@@ -70,13 +70,13 @@ class InitiativeTracker extends React.Component {
           <button className="InitiativeTracker-button" onClick={this.handleClear}>Clear</button>
         </div>
         <div className="InitiativeTracker-body">
-          <table className="InitiativeTracker-table">
+          <table className="InitiativeTracker-table" cellPadding="0">
             <thead>
               <tr>
-                <th align="left">Name</th>
-                <th align="left">HP</th>
-                <th align="left">Initiative</th>
-                <th className="InitiativeTracker-table-contentWidthColumn">Actions</th>
+                <th align="left" className="InitiativeTracker-table-name">Name</th>
+                <th align="left" className="InitiativeTracker-table-hp">HP</th>
+                <th align="left" className="InitiativeTracker-table-initiative">Initiative</th>
+                <th className="InitiativeTracker-table-actions">Actions</th>
               </tr>
             </thead>
             {this.renderEntries()}
@@ -84,7 +84,7 @@ class InitiativeTracker extends React.Component {
         </div>
         <div className="InitiativeTracker-footer">
           <input className="InitiativeTracker-input" type="text" placeholder="Name" value={this.state.addEntryName} onChange={this.setAddEntryName}></input>
-          <input className="InitiativeTracker-input" type="number" placeholder="Hp" value={this.state.addEntryHp || ''} onChange={this.setAddEntryHp}></input>
+          <input className="InitiativeTracker-input" type="number" placeholder="HP" value={this.state.addEntryHp || ''} onChange={this.setAddEntryHp}></input>
           <input className="InitiativeTracker-input" type="number" placeholder="Initiative" value={this.state.addEntryInitiative || ''} onChange={this.setAddEntryInitiative}></input>
           <button className="InitiativeTracker-iconButton" onClick={this.addEntry}><IoIosAdd size="2em" /></button>
         </div>
