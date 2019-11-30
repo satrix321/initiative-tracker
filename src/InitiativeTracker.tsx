@@ -4,7 +4,7 @@ import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosClose } from "react-icons/io";
 import { IoIosAdd } from "react-icons/io";
-// import { IoMdCreate } from "react-icons/io";
+import { IoMdCreate } from "react-icons/io";
 import { GiPistolGun } from "react-icons/gi";
 
 class InitiativeTrackerEntry {
@@ -13,6 +13,7 @@ class InitiativeTrackerEntry {
   hp: number;
   initiative: number;
   isGunReady: boolean;
+  editMode: boolean;
 
   constructor(id: number, name: string, hp: number, initiative: number) {
     this.id = id;
@@ -20,31 +21,43 @@ class InitiativeTrackerEntry {
     this.hp = hp;
     this.initiative = initiative;
     this.isGunReady = false;
+    this.editMode = false;
   }
 }
 
 class InitiativeTracker extends React.Component {
   idCounter: number;
   state: {
-    entryName: string,
-    entryHp: number,
-    entryInitiative: number,
+    addEntryName: string,
+    addEntryHp: number,
+    addEntryInitiative: number,
+    editEntryName: string,
+    editEntryHp: number,
+    editEntryInitiative: number,
     entries: InitiativeTrackerEntry[],
   };
+  isGunReadyInitiative: number = 50;
 
   constructor(props: any) {
     super(props);
     this.idCounter = 0;
     this.state = {
-      entryName: '',
-      entryHp: 0,
-      entryInitiative: 0,
+      addEntryName: '',
+      addEntryHp: 0,
+      addEntryInitiative: 0,
+      editEntryName: '',
+      editEntryHp: 0,
+      editEntryInitiative: 0,
       entries: [],
     };
 
-    this.setEntryName = this.setEntryName.bind(this);
-    this.setEntryHp = this.setEntryHp.bind(this);
-    this.setEntryInitiative = this.setEntryInitiative.bind(this);
+    this.setAddEntryName = this.setAddEntryName.bind(this);
+    this.setAddEntryHp = this.setAddEntryHp.bind(this);
+    this.setAddEntryInitiative = this.setAddEntryInitiative.bind(this);
+
+    this.setEditEntryName = this.setEditEntryName.bind(this);
+    this.setEditEntryHp = this.setEditEntryHp.bind(this);
+    this.setEditEntryInitiative = this.setEditEntryInitiative.bind(this);
   }
 
   render() {
@@ -70,9 +83,9 @@ class InitiativeTracker extends React.Component {
           </table>
         </div>
         <div className="InitiativeTracker-footer">
-          <input className="InitiativeTracker-input" type="text" placeholder="Name" value={this.state.entryName} onChange={this.setEntryName}></input>
-          <input className="InitiativeTracker-input" type="number" placeholder="Hp" value={this.state.entryHp || ''} onChange={this.setEntryHp}></input>
-          <input className="InitiativeTracker-input" type="number" placeholder="Initiative" value={this.state.entryInitiative || ''} onChange={this.setEntryInitiative}></input>
+          <input className="InitiativeTracker-input" type="text" placeholder="Name" value={this.state.addEntryName} onChange={this.setAddEntryName}></input>
+          <input className="InitiativeTracker-input" type="number" placeholder="Hp" value={this.state.addEntryHp || ''} onChange={this.setAddEntryHp}></input>
+          <input className="InitiativeTracker-input" type="number" placeholder="Initiative" value={this.state.addEntryInitiative || ''} onChange={this.setAddEntryInitiative}></input>
           <button className="InitiativeTracker-iconButton" onClick={this.addEntry}><IoIosAdd size="2em" /></button>
         </div>
       </div>
@@ -85,15 +98,40 @@ class InitiativeTracker extends React.Component {
         {this.state.entries
           .map((entry: InitiativeTrackerEntry) => (
             <tr key={entry.id} data-id="{entry.id}">
-              <td>{entry.name}</td>
-              <td>{entry.hp}</td>
-              <td>{entry.isGunReady ? `${entry.initiative} (+50)` : entry.initiative}</td>
+              <td>
+                {(() => {
+                  if (!entry.editMode) {
+                    return entry.name;
+                  } else {
+                    return <input className="InitiativeTracker-input" type="text" defaultValue={entry.name} onChange={this.setEditEntryName}></input>
+                  }
+                })()}
+              </td>
+              <td>
+                {(() => {
+                  if (!entry.editMode) {
+                    return entry.hp;
+                  } else {
+                    return <input className="InitiativeTracker-input" type="number" defaultValue={entry.hp} onChange={this.setEditEntryHp}></input>
+                  }
+                })()}
+              </td>
+              <td>
+                {(() => {
+                  if (!entry.editMode) {
+                    return entry.isGunReady ? `${entry.initiative} (+${this.isGunReadyInitiative})` : entry.initiative;
+                  } else {
+                    return <input className="InitiativeTracker-input" type="number" defaultValue={entry.initiative} onChange={this.setEditEntryInitiative}></input>
+                  }
+                })()}
+              </td>
               <td className="InitiativeTracker-entryActions">
                 <button className={`InitiativeTracker-iconButton ${entry.isGunReady ? "InitiativeTracker-iconButton-clicked" : ""}`} onClick={this.toggleGun.bind(this, entry.id)}><GiPistolGun size="1.5em" /></button>
                 <span className="InitiativeTracker-entryActions-arrows">
                   <button className="InitiativeTracker-iconButton" onClick={this.moveEntryUp.bind(this, entry.id)}><IoIosArrowUp /></button>
                   <button className="InitiativeTracker-iconButton" onClick={this.moveEntryDown.bind(this, entry.id)}><IoIosArrowDown /></button>
                 </span>
+                <button className={`InitiativeTracker-iconButton ${entry.editMode ? "InitiativeTracker-iconButton-clicked" : ""}`}  onClick={this.toggleEditEntry.bind(this, entry.id)}><IoMdCreate size="1.5em" /></button>
                 <button className="InitiativeTracker-iconButton" onClick={this.removeEntry.bind(this, entry.id)}><IoIosClose size="2em" /></button>
               </td>
             </tr>
@@ -103,35 +141,40 @@ class InitiativeTracker extends React.Component {
     );
   }
 
-  setEntryName(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ entryName: event.target.value });
+  setAddEntryName(event: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ addEntryName: event.target.value });
   }
 
-  setEntryHp(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ entryHp: event.target.value });
+  setAddEntryHp(event: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ addEntryHp: Number(event.target.value) });
   }
 
-  setEntryInitiative(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ entryInitiative: Number(event.target.value) });
+  setAddEntryInitiative(event: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ addEntryInitiative: Number(event.target.value) });
+  }
+
+  setEditEntryName(event: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ editEntryName: event.target.value });
+  }
+
+  setEditEntryHp(event: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ editEntryHp: Number(event.target.value) });
+  }
+
+  setEditEntryInitiative(event: React.ChangeEvent<HTMLInputElement>) {
+    this.setState({ editEntryInitiative: Number(event.target.value) });
   }
 
   addEntry = () => {
-    if (this.state.entryName && this.state.entryInitiative) {
-      let tempArray = [...this.state.entries, new InitiativeTrackerEntry(this.idCounter, this.state.entryName, this.state.entryHp, this.state.entryInitiative)];
-      if (this.state.entries.length > 0) {
-        let firstElement = this.state.entries[0];
-        tempArray = this.sortEntries(tempArray);
-        while (tempArray[0].id !== firstElement.id) {
-          let entry = tempArray.shift()!;
-          tempArray.push(entry);
-        }
-      }
+    if (this.state.addEntryName && this.state.addEntryInitiative) {
+      let newEntry = new InitiativeTrackerEntry(this.idCounter, this.state.addEntryName, this.state.addEntryHp, this.state.addEntryInitiative);
+      let tempArray = [...this.state.entries, newEntry];
 
       this.setState({
         entries: tempArray,
-        entryName: '',
-        entryHp: 0,
-        entryInitiative: 0,
+        addEntryName: '',
+        addEntryHp: 0,
+        addEntryInitiative: 0,
       });
       this.idCounter++;
     }
@@ -140,7 +183,7 @@ class InitiativeTracker extends React.Component {
   sortEntries = (entries: InitiativeTrackerEntry[]) => {
     if (entries.length > 0) {
       return [...entries].sort((firstEntry: InitiativeTrackerEntry, secondEntry: InitiativeTrackerEntry) => {
-        return (secondEntry.initiative + (secondEntry.isGunReady ? 50 : 0)) - (firstEntry.initiative + (firstEntry.isGunReady ? 50 : 0));
+        return (secondEntry.initiative + (secondEntry.isGunReady ? this.isGunReadyInitiative : 0)) - (firstEntry.initiative + (firstEntry.isGunReady ? this.isGunReadyInitiative : 0));
       });
     } else {
       return entries;
@@ -204,6 +247,29 @@ class InitiativeTracker extends React.Component {
         return entry.id !== id;
       }),
     });
+  }
+
+  toggleEditEntry(id: number) {
+    let tempArray = [...this.state.entries];
+    let entry = tempArray.find((entry: InitiativeTrackerEntry) => {
+      return entry.id === id;
+    })!;
+
+    if (entry.editMode) {
+      entry.name = this.state.editEntryName;
+      entry.hp = this.state.editEntryHp;
+      entry.initiative = this.state.editEntryInitiative;
+      entry.editMode = !entry.editMode;
+      this.setState({ entries: tempArray });
+    } else {
+      entry.editMode = !entry.editMode;
+      this.setState({ 
+        entries: tempArray,
+        editEntryName: entry.name,
+        editEntryHp: entry.hp,
+        editEntryInitiative: entry.initiative,
+      });
+    }
   }
 
   handleTurn = () => {

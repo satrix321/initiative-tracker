@@ -36,7 +36,7 @@
                 align-items: center;
 
                 > * {
-                    margin: 0.5rem 0.25rem;
+                    margin: 0.25rem 0.25rem;
                 }
 
                 .InitiativeTracker-entryActions-arrows {
@@ -66,7 +66,7 @@
         background-color: #454d66;
         padding: 0.5em 0.75em;
         cursor: pointer;
-        margin: 0.5rem 0.25rem;
+        margin: 0.25rem 0.25rem;
 
         &:hover {
             background-color: rgba(#454d66, 0.85);
@@ -77,6 +77,9 @@
         padding: 0 0.25em;
         height: 2.5em;
         width: 2.5em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .InitiativeTracker-button-clicked,
