@@ -10,12 +10,12 @@ import { GiPistolGun } from "react-icons/gi";
 class InitiativeTrackerEntry {
   id: number;
   name: string;
-  hp: number;
+  hp: string;
   initiative: number;
   isGunReady: boolean;
   editMode: boolean;
 
-  constructor(id: number, name: string, hp: number, initiative: number) {
+  constructor(id: number, name: string, hp: string, initiative: number) {
     this.id = id;
     this.name = name;
     this.hp = hp;
@@ -29,10 +29,10 @@ class InitiativeTracker extends React.Component {
   idCounter: number;
   state: {
     addEntryName: string,
-    addEntryHp: number,
+    addEntryHp: string,
     addEntryInitiative: number,
     editEntryName: string,
-    editEntryHp: number,
+    editEntryHp: string,
     editEntryInitiative: number,
     entries: InitiativeTrackerEntry[],
   };
@@ -43,10 +43,10 @@ class InitiativeTracker extends React.Component {
     this.idCounter = 0;
     this.state = {
       addEntryName: '',
-      addEntryHp: 0,
+      addEntryHp: '',
       addEntryInitiative: 0,
       editEntryName: '',
-      editEntryHp: 0,
+      editEntryHp: '',
       editEntryInitiative: 0,
       entries: [],
     };
@@ -70,21 +70,29 @@ class InitiativeTracker extends React.Component {
           <button className="InitiativeTracker-button" onClick={this.handleClear}>Clear</button>
         </div>
         <div className="InitiativeTracker-body">
-          <table className="InitiativeTracker-table" cellPadding="0">
-            <thead>
-              <tr>
-                <th align="left">Name</th>
-                <th align="left" className="InitiativeTracker-table-hp">HP</th>
-                <th align="left" className="InitiativeTracker-table-initiative">Initiative</th>
-                <th className="InitiativeTracker-table-actions">Actions</th>
-              </tr>
-            </thead>
-            {this.renderEntries()}
-          </table>
+          {(() => {
+            if (this.state.entries.length > 0) {
+              return (
+                <table className="InitiativeTracker-table" cellPadding="0">
+                  <thead>
+                    <tr>
+                      <th align="left">Name</th>
+                      <th align="left" className="InitiativeTracker-table-hp">HP</th>
+                      <th align="left" className="InitiativeTracker-table-initiative">Initiative</th>
+                      <th className="InitiativeTracker-table-actions">Actions</th>
+                    </tr>
+                  </thead>
+                  {this.renderEntries()}
+                </table>
+              );
+            } else {
+              return <div>No Data</div>
+            }
+          })()}
         </div>
         <div className="InitiativeTracker-footer">
           <input className="InitiativeTracker-input" type="text" placeholder="Name" value={this.state.addEntryName} onChange={this.setAddEntryName}></input>
-          <input className="InitiativeTracker-input" type="number" placeholder="HP" value={this.state.addEntryHp || ''} onChange={this.setAddEntryHp}></input>
+          <input className="InitiativeTracker-input" type="text" placeholder="HP" value={this.state.addEntryHp || ''} onChange={this.setAddEntryHp}></input>
           <input className="InitiativeTracker-input" type="number" placeholder="Initiative" value={this.state.addEntryInitiative || ''} onChange={this.setAddEntryInitiative}></input>
           <button className="InitiativeTracker-iconButton" onClick={this.addEntry}><IoIosAdd size="2em" /></button>
         </div>
@@ -112,7 +120,7 @@ class InitiativeTracker extends React.Component {
                   if (!entry.editMode) {
                     return entry.hp;
                   } else {
-                    return <input className="InitiativeTracker-input" type="number" defaultValue={entry.hp} onChange={this.setEditEntryHp}></input>
+                    return <input className="InitiativeTracker-input" type="text" defaultValue={entry.hp} onChange={this.setEditEntryHp}></input>
                   }
                 })()}
               </td>
@@ -146,7 +154,7 @@ class InitiativeTracker extends React.Component {
   }
 
   setAddEntryHp(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ addEntryHp: Number(event.target.value) });
+    this.setState({ addEntryHp: event.target.value });
   }
 
   setAddEntryInitiative(event: React.ChangeEvent<HTMLInputElement>) {
@@ -158,7 +166,7 @@ class InitiativeTracker extends React.Component {
   }
 
   setEditEntryHp(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ editEntryHp: Number(event.target.value) });
+    this.setState({ editEntryHp: event.target.value });
   }
 
   setEditEntryInitiative(event: React.ChangeEvent<HTMLInputElement>) {
@@ -173,7 +181,7 @@ class InitiativeTracker extends React.Component {
       this.setState({
         entries: tempArray,
         addEntryName: '',
-        addEntryHp: 0,
+        addEntryHp: '',
         addEntryInitiative: 0,
       });
       this.idCounter++;
