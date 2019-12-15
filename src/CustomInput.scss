@@ -1,0 +1,36 @@
+$dark-3-grey: hsl(210, 9%, 31%);
+
+.control-group {
+    position: relative;
+
+    .label {
+        font-size: 14px;
+        font-family: Tahoma;
+        position: absolute;
+        margin: 0.5rem 0.25rem;
+        padding: 1px;
+        color: $dark-3-grey;
+        cursor: text;
+    }
+
+    &.control-group--is-active,
+    &.control-group--has-text {
+        .label {
+            font-size: 10px;
+            top: -12px;
+        }
+    }
+
+    .input {
+        font-size: 14px;
+        margin: 0.5rem 0.25rem;
+        padding: 1px;
+        border: 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+        appearance: textfield;
+
+        &:focus {
+            border-bottom: 1px solid black;
+        }
+    }
+}

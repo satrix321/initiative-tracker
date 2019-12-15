@@ -1,3 +1,14 @@
+$dark-5-grey: hsl(213, 12%, 15%);
+$dark-4-grey: hsl(210, 10%, 23%);
+$dark-3-grey: hsl(210, 9%, 31%);
+$dark-2-grey: rgb(135, 143, 151);
+$dark-1-grey: hsl(210, 11%, 71%);
+$light-1-grey: hsl(210, 14%, 83%);
+$light-2-grey: hsl(210, 14%, 89%);
+$light-3-grey: hsl(210, 16%, 93%);
+$light-4-grey: hsl(210, 17%, 95%);
+$light-5-grey: hsl(210, 17%, 98%);
+
 .InitiativeTracker {
     margin: 0.5rem 0.25rem;
 
@@ -66,9 +77,8 @@
                     flex-direction: column;
                     
                     .InitiativeTracker-iconButton {
-                        height: 1.25em;
+                        height: 16px;
                         margin: 0;
-                        padding: 0 0.75em;
                     }
                 }
             }
@@ -87,9 +97,9 @@
         border: none;
         color: #ffffff;
         background-color: #454d66;
-        padding: 0.5em 0.75em;
         cursor: pointer;
-        margin: 0.25rem 0.25rem;
+        height: 32px;
+        margin: 4px;
 
         &:hover {
             background-color: rgba(#454d66, 0.85);
@@ -97,9 +107,8 @@
     }
 
     .InitiativeTracker-iconButton {
-        padding: 0 0.25em;
-        height: 2.5em;
-        width: 2.5em;
+        height: 32px;
+        width: 32px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -116,16 +125,5 @@
 
     button::-moz-focus-inner {
         border: 0;
-    }
-
-    .InitiativeTracker-input {
-        margin: 0.5rem 0.25rem;
-        border: 0;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.5);
-        appearance: textfield;
-
-        &:focus {
-            border-bottom: 1px solid black;
-        }
     }
 }

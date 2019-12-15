@@ -7,6 +7,8 @@ import { IoIosAdd } from "react-icons/io";
 import { IoMdCreate } from "react-icons/io";
 import { GiPistolGun } from "react-icons/gi";
 
+import CustomInput from './CustomInput';
+
 class InitiativeTrackerEntry {
   id: number;
   name: string;
@@ -91,13 +93,13 @@ class InitiativeTracker extends React.Component {
           })()}
         </div>
         <div className="InitiativeTracker-footer">
-          <input className="InitiativeTracker-input" type="text" placeholder="Name" value={this.state.addEntryName} onChange={this.setAddEntryName}></input>
-          <input className="InitiativeTracker-input" type="text" placeholder="HP" value={this.state.addEntryHp || ''} onChange={this.setAddEntryHp}></input>
-          <input className="InitiativeTracker-input" type="number" placeholder="Initiative" value={this.state.addEntryInitiative || ''} onChange={this.setAddEntryInitiative}></input>
+          <CustomInput label="Name" type="text" value={this.state.addEntryName} onChange={this.setAddEntryName}/>
+          <CustomInput label="HP" type="text" value={this.state.addEntryHp} onChange={this.setAddEntryHp}/>
+          <CustomInput label="Initiative" type="number" value={this.state.addEntryInitiative} onChange={this.setAddEntryInitiative}/>
           <button className="InitiativeTracker-iconButton" onClick={this.addEntry}><IoIosAdd size="2em" /></button>
         </div>
       </div>
-    )
+    );
   }
 
   renderEntries() {
@@ -171,6 +173,19 @@ class InitiativeTracker extends React.Component {
 
   setEditEntryInitiative(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({ editEntryInitiative: Number(event.target.value) });
+  }
+
+  focusInput(event: React.FocusEvent<HTMLInputElement>) {
+    event.target.parentElement!.classList.add('InitiativeTracker-controlGroup-active');
+  }
+
+  blurInput(event: React.FocusEvent<HTMLInputElement>) {
+    if ((event.target.value !== null && event.target.value !== undefined && event.target.value !== '') || !event.target.validity.valid) {
+      event.target.parentElement!.classList.add('InitiativeTracker-controlGroup-hasText');
+    } else {
+      event.target.parentElement!.classList.remove('InitiativeTracker-controlGroup-hasText');
+    }
+    event.target.parentElement!.classList.remove('InitiativeTracker-controlGroup-active');
   }
 
   addEntry = () => {
