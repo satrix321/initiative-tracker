@@ -96,7 +96,9 @@ class InitiativeTracker extends React.Component {
           <CustomInput label="Name" type="text" value={this.state.addEntryName} onChange={this.setAddEntryName}/>
           <CustomInput label="HP" type="text" value={this.state.addEntryHp} onChange={this.setAddEntryHp}/>
           <CustomInput label="Initiative" type="number" value={this.state.addEntryInitiative} onChange={this.setAddEntryInitiative}/>
-          <button className="InitiativeTracker-iconButton" onClick={this.addEntry}><IoIosAdd size="2em" /></button>
+          <button className="InitiativeTracker-iconButton" onClick={this.addEntry}>
+            <IoIosAdd size="2em"/>
+          </button>
         </div>
       </div>
     );

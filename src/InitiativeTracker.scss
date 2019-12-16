@@ -1,129 +1,137 @@
-$dark-5-grey: hsl(213, 12%, 15%);
-$dark-4-grey: hsl(210, 10%, 23%);
-$dark-3-grey: hsl(210, 9%, 31%);
-$dark-2-grey: rgb(135, 143, 151);
-$dark-1-grey: hsl(210, 11%, 71%);
-$light-1-grey: hsl(210, 14%, 83%);
-$light-2-grey: hsl(210, 14%, 89%);
-$light-3-grey: hsl(210, 16%, 93%);
-$light-4-grey: hsl(210, 17%, 95%);
-$light-5-grey: hsl(210, 17%, 98%);
+@import 'global';
 
 .InitiativeTracker {
+  margin: 0.5rem 0.25rem;
+
+  .InitiativeTracker-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 0.5rem 0.25rem;
 
-    .InitiativeTracker-header {
+    .InitiativeTracker-title {
+      flex-grow: 2;
+      margin: 0.5rem 0.25rem;
+    }
+  }
+
+  .InitiativeTracker-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0.5rem 0.25rem;
+
+    .InitiativeTracker-table {
+      width: 100%;
+      border-spacing: 0;
+
+      th,
+      td {
+        padding: 0 0.25rem;
+      }
+
+      tbody tr:nth-child(odd) {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+
+      .InitiativeTracker-input {
+        width: calc(100% - 0.5rem);
+        margin: 0;
+      }
+
+      .InitiativeTracker-table-hp {
+        width: 0;
+        min-width: 4.5rem;
+      }
+
+      .InitiativeTracker-table-initiative {
+        width: 0;
+        min-width: 5rem;
+      }
+
+      .InitiativeTracker-table-actions {
+        width: 10.5rem;
+        padding: 0;
+      }
+
+      .InitiativeTracker-entryActions {
         display: flex;
-        justify-content: center;
         align-items: center;
-        margin: 0.5rem 0.25rem;
+        justify-content: flex-end;
+        padding: 0;
 
-        .InitiativeTracker-title {
-            flex-grow: 2;
-            margin: 0.5rem 0.25rem;
+        > * {
+          margin: 0.25rem 0.25rem;
         }
-    }
-    
-    .InitiativeTracker-body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0.5rem 0.25rem;
 
-        .InitiativeTracker-table {
-            width: 100%;
-            border-spacing: 0;
+        .InitiativeTracker-entryActions-arrows {
+          display: flex;
+          flex-direction: column;
 
-            th, td {
-                padding: 0 0.25rem;
-            }
-            
-            tbody tr:nth-child(odd) {
-                background-color: rgba(0, 0, 0, 0.1);
+          .InitiativeTracker-iconButton {
+            height: 16px;
+            margin: 0;
+
+            &:first-child {
+              border-bottom-left-radius: 0;
+              border-bottom-right-radius: 0;
             }
 
-            .InitiativeTracker-input {
-                width: calc(100% - 0.5rem);
-                margin: 0;
+            &:last-child {
+              border-top-left-radius: 0;
+              border-top-right-radius: 0;
             }
-
-            .InitiativeTracker-table-hp {
-                width: 0;
-                min-width: 4.5rem;
-            }
-
-            .InitiativeTracker-table-initiative {
-                width: 0;
-                min-width: 5rem;
-            }
-
-            .InitiativeTracker-table-actions {
-                width: 10.5rem;
-                padding: 0;
-            }
-
-            .InitiativeTracker-entryActions {
-                display: flex;
-                align-items: center;
-                justify-content: flex-end;
-                padding: 0;
-
-                > * {
-                    margin: 0.25rem 0.25rem;
-                }
-
-                .InitiativeTracker-entryActions-arrows {
-                    display: flex;
-                    flex-direction: column;
-                    
-                    .InitiativeTracker-iconButton {
-                        height: 16px;
-                        margin: 0;
-                    }
-                }
-            }
+          }
         }
+      }
+    }
+  }
+
+  .InitiativeTracker-footer {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    margin: 0.5rem 0.25rem;
+  }
+
+  .InitiativeTracker-button,
+  .InitiativeTracker-iconButton {
+    border: none;
+    border-radius: 4px;
+    color: $light-icon;
+    background-color: $primary;
+    cursor: pointer;
+    height: 32px;
+    margin: 4px;
+
+    &:hover {
+      background-color: $light-1-primary;
     }
 
-    .InitiativeTracker-footer {
-        display: flex;
-        justify-content: right;
-        align-items: center;
-        margin: 0.5rem 0.25rem;
+    &:active {
+      background-color: $dark-2-primary;
     }
+  }
 
-    .InitiativeTracker-button,
-    .InitiativeTracker-iconButton {
-        border: none;
-        color: #ffffff;
-        background-color: #454d66;
-        cursor: pointer;
-        height: 32px;
-        margin: 4px;
+  .InitiativeTracker-iconButton {
+    height: 32px;
+    width: 32px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-        &:hover {
-            background-color: rgba(#454d66, 0.85);
-        }
+  .InitiativeTracker-button-clicked,
+  .InitiativeTracker-iconButton-clicked {
+    background-color: $dark-2-primary;
+
+    &:hover {
+      background-color: $dark-2-primary;
     }
+  }
 
-    .InitiativeTracker-iconButton {
-        height: 32px;
-        width: 32px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .InitiativeTracker-button-clicked,
-    .InitiativeTracker-iconButton-clicked {
-        background-color: #309975;
-
-        &:hover {
-            background-color: rgba(#309975, 0.85);
-        }
-    }
-
-    button::-moz-focus-inner {
-        border: 0;
-    }
+  button::-moz-focus-inner {
+    border: 0;
+  }
 }

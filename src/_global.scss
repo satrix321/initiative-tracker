@@ -1,0 +1,51 @@
+$font-text: 'Segoe UI';
+$font-input: Tahoma;
+
+$black: hsl(0, 0%, 0%);
+$white: hsl(0, 0%, 100%);
+
+$dark-5-grey: hsl(213, 12%, 15%);
+$dark-4-grey: hsl(210, 10%, 23%);
+$dark-3-grey: hsl(210, 9%, 31%);
+$dark-2-grey: hsl(210, 7%, 56%);
+$dark-1-grey: hsl(210, 11%, 71%);
+$light-1-grey: hsl(210, 14%, 83%);
+$light-2-grey: hsl(210, 14%, 89%);
+$light-3-grey: hsl(210, 16%, 93%);
+$light-4-grey: hsl(210, 17%, 95%);
+$light-5-grey: hsl(210, 17%, 98%);
+
+$purple-1: hsl(270, 62%, 10%);
+$purple-2: hsl(270, 63%, 25%);
+$purple-3: hsl(270, 63%, 32%);
+$purple-4: hsl(270, 63%, 42%);
+$purple-5: hsl(270, 63%, 55%);
+$purple-6: hsl(270, 63%, 75%);
+$purple-7: hsl(270, 62%, 90%);
+
+$red-1: hsl(0, 70%, 25%);
+$red-2: hsl(0, 67%, 33%);
+$red-3: hsl(0, 70%, 42%);
+$red-4: hsl(0, 70%, 50%);
+$red-5: hsl(0, 70%, 65%);
+$red-6: hsl(0, 79%, 80%);
+$red-7: hsl(0, 77%, 95%);
+
+$light-icon: $white;
+$dark-icon: $black;
+
+$dark-3-primary: $purple-1;
+$dark-2-primary: $purple-2;
+$dark-1-primary: $purple-3;
+$primary: $purple-4;
+$light-1-primary: $purple-5;
+$light-2-primary: $purple-6;
+$light-3-primary: $purple-7;
+
+$dark-3-error: $red-1;
+$dark-2-error: $red-2;
+$dark-1-error: $red-3;
+$error: $red-4;
+$light-1-error: $red-5;
+$light-2-error: $red-6;
+$light-3-error: $red-7;

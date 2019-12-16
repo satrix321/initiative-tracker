@@ -62,6 +62,12 @@ class CustomInput extends React.Component<CustomInputProps, {}> {
       event.target.parentElement!.classList.remove('control-group--has-text');
     }
     event.target.parentElement!.classList.remove('control-group--is-active');
+
+    if (!event.target.validity.valid) {
+      event.target.parentElement!.classList.add('control-group--invalid');
+    } else {
+      event.target.parentElement!.classList.remove('control-group--invalid');
+    }
   }
 }
 
