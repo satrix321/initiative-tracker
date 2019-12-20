@@ -4,9 +4,11 @@ import './CustomInput.scss';
 import uniqueId from 'lodash/uniqueId';
 
 interface CustomInputProps {
-  label: string,
-  value: any,
-  type: string,
+  label?: string,
+  defaultValue?: any,
+  value?: any,
+  type?: string,
+  fullWidth?: boolean,
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
 }
 
@@ -26,9 +28,10 @@ class CustomInput extends React.Component<CustomInputProps, {}> {
         <label htmlFor={this.id} className="label">{this.props.label}</label>
         <input
           id={this.id}
-          className="input"
-          type={this.props.type}
-          value={this.props.value || ''}
+          className={`input ${this.props.fullWidth ? 'input--is-full-width' : ''}`}
+          type={this.props.type || 'text'}
+          defaultValue={this.props.defaultValue}
+          value={this.props.value || (this.props.type === 'number' && !this.props.defaultValue ? '' : this.props.value)}
           onChange={this.props.onChange}
           onFocus={this.focusInput}
           onBlur={this.blurInput}

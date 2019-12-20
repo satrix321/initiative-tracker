@@ -88,7 +88,7 @@ class InitiativeTracker extends React.Component {
                 </table>
               );
             } else {
-              return <div>No Data</div>
+              return <div className="InitiativeTracker-no-data">No Data</div>
             }
           })()}
         </div>
@@ -109,13 +109,14 @@ class InitiativeTracker extends React.Component {
       <tbody>
         {this.state.entries
           .map((entry: InitiativeTrackerEntry) => (
-            <tr key={entry.id} data-id="{entry.id}">
+            <tr key={entry.id} data-id={entry.id}>
               <td>
                 {(() => {
                   if (!entry.editMode) {
                     return entry.name;
                   } else {
-                    return <input className="InitiativeTracker-input" type="text" defaultValue={entry.name} onChange={this.setEditEntryName}></input>
+                    // return <input className="InitiativeTracker-input" type="text" defaultValue={entry.name} onChange={this.setEditEntryName}></input>
+                    return <CustomInput fullWidth type="text" defaultValue={entry.name} onChange={this.setEditEntryName}/>
                   }
                 })()}
               </td>
@@ -124,7 +125,8 @@ class InitiativeTracker extends React.Component {
                   if (!entry.editMode) {
                     return entry.hp;
                   } else {
-                    return <input className="InitiativeTracker-input" type="text" defaultValue={entry.hp} onChange={this.setEditEntryHp}></input>
+                    // return <input className="InitiativeTracker-input" type="text" defaultValue={entry.hp} onChange={this.setEditEntryHp}></input>
+                    return <CustomInput fullWidth type="text" defaultValue={entry.hp} onChange={this.setEditEntryHp}/>
                   }
                 })()}
               </td>
@@ -133,7 +135,8 @@ class InitiativeTracker extends React.Component {
                   if (!entry.editMode) {
                     return entry.isGunReady ? `${entry.initiative} (+${this.isGunReadyInitiative})` : entry.initiative;
                   } else {
-                    return <input className="InitiativeTracker-input" type="number" defaultValue={entry.initiative} onChange={this.setEditEntryInitiative}></input>
+                    // return <input className="InitiativeTracker-input" type="number" defaultValue={entry.initiative} onChange={this.setEditEntryInitiative}></input>
+                    return <CustomInput fullWidth type="number" defaultValue={entry.initiative} onChange={this.setEditEntryInitiative}/>
                   }
                 })()}
               </td>

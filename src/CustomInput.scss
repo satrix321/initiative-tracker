@@ -54,5 +54,10 @@
       outline: none;
       box-shadow: none;
     }
+
+    &.input--is-full-width {
+      width: 100%;
+      margin: 0;
+    }
   }
 }
