@@ -8,6 +8,8 @@ import { IoMdCreate } from "react-icons/io";
 import { GiPistolGun } from "react-icons/gi";
 
 import CustomInput from './CustomInput';
+import CustomButton from './CustomButton';
+import CustomButtonGroup from './CustomButtonGroup';
 
 class InitiativeTrackerEntry {
   id: number;
@@ -67,9 +69,9 @@ class InitiativeTracker extends React.Component {
       <div className="InitiativeTracker">
         <div className="InitiativeTracker-header">
           <span className="InitiativeTracker-title">Initiative Tracker</span>
-          <button className="InitiativeTracker-button" onClick={this.handleTurn}>Turn</button>
-          <button className="InitiativeTracker-button" onClick={this.handleSort}>Sort</button>
-          <button className="InitiativeTracker-button" onClick={this.handleClear}>Clear</button>
+          <CustomButton onClick={this.handleTurn}>Turn</CustomButton>
+          <CustomButton onClick={this.handleSort}>Sort</CustomButton>
+          <CustomButton onClick={this.handleClear}>Clear</CustomButton>
         </div>
         <div className="InitiativeTracker-body">
           {(() => {
@@ -96,9 +98,9 @@ class InitiativeTracker extends React.Component {
           <CustomInput label="Name" type="text" value={this.state.addEntryName} onChange={this.setAddEntryName}/>
           <CustomInput label="HP" type="text" value={this.state.addEntryHp} onChange={this.setAddEntryHp}/>
           <CustomInput label="Initiative" type="number" value={this.state.addEntryInitiative} onChange={this.setAddEntryInitiative}/>
-          <button className="InitiativeTracker-iconButton" onClick={this.addEntry}>
+          <CustomButton icon onClick={this.addEntry}>
             <IoIosAdd size="2em"/>
-          </button>
+          </CustomButton>
         </div>
       </div>
     );
@@ -115,7 +117,6 @@ class InitiativeTracker extends React.Component {
                   if (!entry.editMode) {
                     return entry.name;
                   } else {
-                    // return <input className="InitiativeTracker-input" type="text" defaultValue={entry.name} onChange={this.setEditEntryName}></input>
                     return <CustomInput fullWidth type="text" defaultValue={entry.name} onChange={this.setEditEntryName}/>
                   }
                 })()}
@@ -125,7 +126,6 @@ class InitiativeTracker extends React.Component {
                   if (!entry.editMode) {
                     return entry.hp;
                   } else {
-                    // return <input className="InitiativeTracker-input" type="text" defaultValue={entry.hp} onChange={this.setEditEntryHp}></input>
                     return <CustomInput fullWidth type="text" defaultValue={entry.hp} onChange={this.setEditEntryHp}/>
                   }
                 })()}
@@ -135,19 +135,24 @@ class InitiativeTracker extends React.Component {
                   if (!entry.editMode) {
                     return entry.isGunReady ? `${entry.initiative} (+${this.isGunReadyInitiative})` : entry.initiative;
                   } else {
-                    // return <input className="InitiativeTracker-input" type="number" defaultValue={entry.initiative} onChange={this.setEditEntryInitiative}></input>
                     return <CustomInput fullWidth type="number" defaultValue={entry.initiative} onChange={this.setEditEntryInitiative}/>
                   }
                 })()}
               </td>
               <td className="InitiativeTracker-entryActions">
-                <button className={`InitiativeTracker-iconButton ${entry.isGunReady ? "InitiativeTracker-iconButton-clicked" : ""}`} onClick={this.toggleGun.bind(this, entry.id)}><GiPistolGun size="1.5em" /></button>
-                <span className="InitiativeTracker-entryActions-arrows">
-                  <button className="InitiativeTracker-iconButton" onClick={this.moveEntryUp.bind(this, entry.id)}><IoIosArrowUp /></button>
-                  <button className="InitiativeTracker-iconButton" onClick={this.moveEntryDown.bind(this, entry.id)}><IoIosArrowDown /></button>
-                </span>
-                <button className={`InitiativeTracker-iconButton ${entry.editMode ? "InitiativeTracker-iconButton-clicked" : ""}`}  onClick={this.toggleEditEntry.bind(this, entry.id)}><IoMdCreate size="1.5em" /></button>
-                <button className="InitiativeTracker-iconButton" onClick={this.removeEntry.bind(this, entry.id)}><IoIosClose size="2em" /></button>
+                <CustomButton icon secondary clicked={entry.isGunReady} onClick={this.toggleGun.bind(this, entry.id)}>
+                  <GiPistolGun size="1.5em" />
+                </CustomButton>
+                <CustomButtonGroup>
+                  <CustomButton icon secondary onClick={this.moveEntryUp.bind(this, entry.id)}><IoIosArrowUp /></CustomButton>
+                  <CustomButton icon secondary onClick={this.moveEntryDown.bind(this, entry.id)}><IoIosArrowDown /></CustomButton>
+                </CustomButtonGroup>
+                <CustomButton icon secondary clicked={entry.editMode} onClick={this.toggleEditEntry.bind(this, entry.id)}>
+                  <IoMdCreate size="1.5em" />
+                </CustomButton>
+                <CustomButton icon secondary onClick={this.removeEntry.bind(this, entry.id)}>
+                  <IoIosClose size="2em" />
+                </CustomButton>
               </td>
             </tr>
           ))

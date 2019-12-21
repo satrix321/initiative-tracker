@@ -12,7 +12,7 @@
     .InitiativeTracker-title {
       flex-grow: 2;
       margin: 0.5rem 0.25rem;
-      font-size: 18px;
+      font-size: $font-size-18;
       font-weight: 600;
     }
   }
@@ -46,7 +46,7 @@
       }
 
       tbody tr:nth-child(odd) {
-        background-color: rgba(0, 0, 0, 0.1);
+        background-color: $light-3-grey;
       }
 
       .InitiativeTracker-input {
@@ -78,26 +78,6 @@
         > * {
           margin: 0.25rem 0.25rem;
         }
-
-        .InitiativeTracker-entryActions-arrows {
-          display: flex;
-          flex-direction: column;
-
-          .InitiativeTracker-iconButton {
-            height: 16px;
-            margin: 0;
-
-            &:first-child {
-              border-bottom-left-radius: 0;
-              border-bottom-right-radius: 0;
-            }
-
-            &:last-child {
-              border-top-left-radius: 0;
-              border-top-right-radius: 0;
-            }
-          }
-        }
       }
     }
   }
@@ -107,46 +87,5 @@
     justify-content: right;
     align-items: center;
     margin: 0.5rem 0.25rem;
-  }
-
-  .InitiativeTracker-button,
-  .InitiativeTracker-iconButton {
-    border: none;
-    border-radius: 4px;
-    color: $light-icon;
-    background-color: $primary;
-    cursor: pointer;
-    height: 32px;
-    margin: 4px;
-
-    &:hover {
-      background-color: $light-1-primary;
-    }
-
-    &:active {
-      background-color: $dark-2-primary;
-    }
-  }
-
-  .InitiativeTracker-iconButton {
-    height: 32px;
-    width: 32px;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .InitiativeTracker-button-clicked,
-  .InitiativeTracker-iconButton-clicked {
-    background-color: $dark-2-primary;
-
-    &:hover {
-      background-color: $dark-2-primary;
-    }
-  }
-
-  button::-moz-focus-inner {
-    border: 0;
   }
 }

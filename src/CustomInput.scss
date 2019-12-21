@@ -6,7 +6,7 @@
   &.control-group--is-active,
   &.control-group--has-text {
     .label {
-      font-size: 10px;
+      font-size: $font-size-10;
       top: -12px;
     }
   }
@@ -29,7 +29,7 @@
   .label {
     transition: top .3s ease-out, font-size .3s ease-out;
     top: 0px;
-    font-size: 14px;
+    font-size: $font-size-14;
     position: absolute;
     margin: 10px 5px;
     padding: 1px;
@@ -38,13 +38,14 @@
   }
 
   .input {
-    font-size: 14px;
+    font-size: $font-size-14;
     margin: 10px 5px;
     padding: 1px;
     border: 0;
     border-bottom: 1px solid $dark-2-grey;
     color: $dark-5-grey;
     appearance: textfield;
+    transition: border-bottom .3s ease-out;
 
     &:focus {
       border-bottom: 1px solid $dark-5-grey;
