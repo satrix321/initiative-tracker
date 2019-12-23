@@ -13,7 +13,9 @@ class CustomButton extends React.Component<CustomButtonProps, {}> {
   render() {
     return (
       <button
-        className={`button ${this.props.icon ? 'button--icon' : ''} ${this.props.clicked ? 'button--is-clicked' : ''} ${this.props.secondary ? 'button--is-secondary' : ''}`}
+        className={`button ${this.props.icon ? 'button--icon' : ''}
+          ${this.props.clicked ? 'button--is-clicked' : ''}
+          ${this.props.secondary ? 'button--is-secondary' : ''}`}
         onClick={this.props.onClick}
       >
         {this.props.children}

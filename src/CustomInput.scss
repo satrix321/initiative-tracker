@@ -31,21 +31,23 @@
     top: 0px;
     font-size: $font-size-14;
     position: absolute;
-    margin: 10px 5px;
+    margin: $spacing-2 $spacing-1;
     padding: 1px;
     color: $dark-3-grey;
     cursor: text;
   }
 
   .input {
+    background: transparent;
     font-size: $font-size-14;
-    margin: 10px 5px;
+    margin: $spacing-2 $spacing-1;
     padding: 1px;
     border: 0;
     border-bottom: 1px solid $dark-2-grey;
     color: $dark-5-grey;
     appearance: textfield;
     transition: border-bottom .3s ease-out;
+    width: calc(100% - #{$spacing-2});
 
     &:focus {
       border-bottom: 1px solid $dark-5-grey;

@@ -4,7 +4,7 @@ import InitiativeTracker from './InitiativeTracker';
 class App extends React.Component {
   render() {
     return (
-      <div style={{margin: 'auto', maxWidth: 700}}>
+      <div style={{maxWidth: 700, margin: 'auto'}}>
         <InitiativeTracker></InitiativeTracker>
       </div>
     )

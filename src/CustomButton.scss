@@ -2,16 +2,22 @@
 
 .button {
   border: none;
-  border-radius: 4px;
+  border-radius: $spacing-1;
   color: $light-icon;
   background-color: $primary;
   cursor: pointer;
-  height: 32px;
-  margin: 4px;
-  transition: background-color .3s ease-out;
+  height: $spacing-6;
+  margin: $spacing-1;
+
+  &::-moz-focus-inner {
+    border: 0;
+    outline: 0;
+  }
 
   &:hover {
     background-color: $light-1-primary;
+    border: 0;
+    outline: 0;
   }
 
   &:active {
@@ -19,11 +25,15 @@
   }
 
   &.button--icon {
-    width: 32px;
+    width: $spacing-6;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
+
+    > svg {
+      width: $spacing-6;
+    }
   }
 
   &.button--is-clicked {
