@@ -51,6 +51,7 @@
 
     &:focus {
       border-bottom: 1px solid $dark-5-grey;
+      outline: 0;
     }
 
     &:invalid {

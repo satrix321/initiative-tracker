@@ -5,6 +5,7 @@ interface CustomButtonProps {
   icon?: boolean,
   secondary?: boolean,
   clicked?: boolean,
+  ariaLabel?: string,
   onClick: () => void,
 }
 
@@ -17,6 +18,7 @@ class CustomButton extends React.Component<CustomButtonProps, {}> {
           ${this.props.clicked ? 'button--is-clicked' : ''}
           ${this.props.secondary ? 'button--is-secondary' : ''}`}
         onClick={this.props.onClick}
+        aria-label={this.props.ariaLabel}
       >
         {this.props.children}
       </button>

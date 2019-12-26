@@ -100,7 +100,7 @@ class InitiativeTracker extends React.Component {
           <CustomInput label="Name" type="text" value={this.state.addEntryName} onChange={this.setAddEntryName}/>
           <CustomInput label="HP" type="text" value={this.state.addEntryHp} onChange={this.setAddEntryHp}/>
           <CustomInput label="Initiative" type="number" value={this.state.addEntryInitiative} onChange={this.setAddEntryInitiative}/>
-          <CustomButton icon onClick={this.addEntry}>
+          <CustomButton icon onClick={this.addEntry} ariaLabel="Add record">
             <IoIosAdd size="2em"/>
           </CustomButton>
         </div>
@@ -143,24 +143,59 @@ class InitiativeTracker extends React.Component {
               </td>
               <td>
                 <div className="initiative-tracker__actions-container initiative-tracker__actions-container--desktop-only">
-                  <CustomButton icon secondary clicked={entry.isGunReady} onClick={this.toggleGun.bind(this, entry.id)}>
+                  <CustomButton
+                    icon
+                    secondary
+                    clicked={entry.isGunReady}
+                    onClick={this.toggleGun.bind(this, entry.id)}
+                    ariaLabel="Gun ready"
+                  >
                     <GiPistolGun size="1.5em" />
                   </CustomButton>
                   <CustomButtonGroup>
-                    <CustomButton icon secondary onClick={this.moveEntryUp.bind(this, entry.id)}><IoIosArrowUp /></CustomButton>
-                    <CustomButton icon secondary onClick={this.moveEntryDown.bind(this, entry.id)}><IoIosArrowDown /></CustomButton>
+                    <CustomButton
+                      icon
+                      secondary
+                      onClick={this.moveEntryUp.bind(this, entry.id)}
+                      ariaLabel="Move up"
+                    >
+                      <IoIosArrowUp />
+                    </CustomButton>
+                    <CustomButton
+                      icon
+                      secondary
+                      onClick={this.moveEntryDown.bind(this, entry.id)}
+                      ariaLabel="Move down"
+                    >
+                      <IoIosArrowDown />
+                    </CustomButton>
                   </CustomButtonGroup>
-                  <CustomButton icon secondary clicked={entry.editMode} onClick={this.toggleEditEntry.bind(this, entry.id)}>
+                  <CustomButton
+                    icon
+                    secondary
+                    clicked={entry.editMode}
+                    onClick={this.toggleEditEntry.bind(this, entry.id)}
+                    ariaLabel="Edit mode"
+                  >
                     <IoMdCreate size="1.5em" />
                   </CustomButton>
-                  <CustomButton icon secondary onClick={this.removeEntry.bind(this, entry.id)}>
+                  <CustomButton
+                    icon
+                    secondary
+                    onClick={this.removeEntry.bind(this, entry.id)}
+                    ariaLabel="Remove entry"
+                  >
                     <IoIosClose size="2em" />
                   </CustomButton>
                 </div>
                 <div className="initiative-tracker__actions-container initiative-tracker__actions-container--mobile-only">
                   <CustomButtonGroup>
-                    <CustomButton icon secondary onClick={this.moveEntryUp.bind(this, entry.id)}><IoIosArrowUp /></CustomButton>
-                    <CustomButton icon secondary onClick={this.moveEntryDown.bind(this, entry.id)}><IoIosArrowDown /></CustomButton>
+                    <CustomButton icon secondary onClick={this.moveEntryUp.bind(this, entry.id)} ariaLabel="Move up">
+                      <IoIosArrowUp />
+                    </CustomButton>
+                    <CustomButton icon secondary onClick={this.moveEntryDown.bind(this, entry.id)} ariaLabel="Move down">
+                      <IoIosArrowDown />
+                    </CustomButton>
                   </CustomButtonGroup>
                   <CustomMenu
                     activatorIcon
