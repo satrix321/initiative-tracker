@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/initiative-tracker/static/css/main.511b0a34.chunk.css",
+    "main.css": "/initiative-tracker/static/css/main.fdfd1c36.chunk.css",
     "main.js": "/initiative-tracker/static/js/main.8cbbb2da.chunk.js",
     "main.js.map": "/initiative-tracker/static/js/main.8cbbb2da.chunk.js.map",
     "runtime-main.js": "/initiative-tracker/static/js/runtime-main.7ff971eb.js",
@@ -8,14 +8,14 @@
     "static/js/2.0435fbd1.chunk.js": "/initiative-tracker/static/js/2.0435fbd1.chunk.js",
     "static/js/2.0435fbd1.chunk.js.map": "/initiative-tracker/static/js/2.0435fbd1.chunk.js.map",
     "index.html": "/initiative-tracker/index.html",
-    "precache-manifest.16fe3c2a89a66724a2fd4426b0e4189d.js": "/initiative-tracker/precache-manifest.16fe3c2a89a66724a2fd4426b0e4189d.js",
+    "precache-manifest.1f9fe9ed98e78e14042f7cf8bbbb3269.js": "/initiative-tracker/precache-manifest.1f9fe9ed98e78e14042f7cf8bbbb3269.js",
     "service-worker.js": "/initiative-tracker/service-worker.js",
-    "static/css/main.511b0a34.chunk.css.map": "/initiative-tracker/static/css/main.511b0a34.chunk.css.map"
+    "static/css/main.fdfd1c36.chunk.css.map": "/initiative-tracker/static/css/main.fdfd1c36.chunk.css.map"
   },
   "entrypoints": [
     "static/js/runtime-main.7ff971eb.js",
     "static/js/2.0435fbd1.chunk.js",
-    "static/css/main.511b0a34.chunk.css",
+    "static/css/main.fdfd1c36.chunk.css",
     "static/js/main.8cbbb2da.chunk.js"
   ]
 }
