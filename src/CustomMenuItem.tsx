@@ -6,18 +6,15 @@ interface CustomMenuItemProps {
   onClick: () => void,
 }
 
-class CustomMenuItem extends React.Component<CustomMenuItemProps, {}> {
-
-  render() {
-    return (
-      <div
-        className={`menu-item ${this.props.clicked ? 'menu-item--is-clicked' : ''}`}
-        onClick={this.props.onClick}
-      >
-        {this.props.children}
-      </div>
-    );
-  }
+const CustomMenuItem: React.FC<CustomMenuItemProps> = (props) => {
+  return (
+    <div
+      className={`menu-item ${props.clicked ? 'menu-item--is-clicked' : ''}`}
+      onClick={props.onClick}
+    >
+      {props.children}
+    </div>
+  );
 }
 
 export default CustomMenuItem;

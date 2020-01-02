@@ -1,5 +1,4 @@
-import React from 'react';
-import ReactDOM from "react-dom";
+import React, { useEffect, useRef } from 'react';
 import './CustomInput.scss';
 import uniqueId from 'lodash/uniqueId';
 
@@ -12,53 +11,30 @@ interface CustomInputProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
 }
 
-class CustomInput extends React.Component<CustomInputProps, {}> {
-  id: string;
-  controlGroup: HTMLElement | undefined;
-  input: HTMLInputElement | undefined;
+const CustomInput: React.FC<CustomInputProps> = (props) => {
+  const id = `input_${uniqueId()}`;
 
-  constructor(props: any) {
-    super(props);
-    this.id = `input_${uniqueId()}`;
-  }
+  const controlGroup = useRef<HTMLElement>(null);
+  const input = useRef<HTMLInputElement>(null);
 
-  render() {
-    return (
-      <span className="control-group">
-        <label htmlFor={this.id} className="label">{this.props.label}</label>
-        <input
-          id={this.id}
-          className={`input ${this.props.fullWidth ? 'input--is-full-width' : ''}`}
-          type={this.props.type || 'text'}
-          defaultValue={this.props.defaultValue}
-          value={this.props.value || (this.props.type === 'number' && !this.props.defaultValue ? '' : this.props.value)}
-          onChange={this.props.onChange}
-          onFocus={this.focusInput}
-          onBlur={this.blurInput}
-        >
-        </input>
-      </span>
-    );
-  }
-
-  componentDidMount() {
-    this.controlGroup = ReactDOM.findDOMNode(this) as HTMLElement;
-    this.input = this.controlGroup.querySelector('.input') as HTMLInputElement;
-  }
-
-  componentDidUpdate() {
-    if (this.props.value === null || this.props.value === undefined || this.props.value === '' || this.props.value === 0) {
-      if (this.input !== document.activeElement) {
-        this.controlGroup!.classList.remove('control-group--is-active', 'control-group--has-text');
+  const mounted = useRef(false);
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+    } else {
+      if (props.value === null || props.value === undefined || props.value === '' || props.value === 0) {
+        if (input.current !== document.activeElement) {
+          controlGroup.current!.classList.remove('control-group--is-active', 'control-group--has-text');
+        }
       }
     }
-  } 
+  });
 
-  focusInput(event: React.FocusEvent<HTMLInputElement>) {
+  const focusInput = (event: React.FocusEvent<HTMLInputElement>) => {
     event.target.parentElement!.classList.add('control-group--is-active');
   }
 
-  blurInput(event: React.FocusEvent<HTMLInputElement>) {
+  const blurInput = (event: React.FocusEvent<HTMLInputElement>) => {
     if ((event.target.value !== null && event.target.value !== undefined && event.target.value !== '') || !event.target.validity.valid) {
       event.target.parentElement!.classList.add('control-group--has-text');
     } else {
@@ -72,6 +48,24 @@ class CustomInput extends React.Component<CustomInputProps, {}> {
       event.target.parentElement!.classList.remove('control-group--invalid');
     }
   }
+
+  return (
+    <span ref={controlGroup} className="control-group">
+      <label htmlFor={id} className="label">{props.label}</label>
+      <input
+        ref={input}
+        id={id}
+        className={`input ${props.fullWidth ? 'input--is-full-width' : ''}`}
+        type={props.type || 'text'}
+        defaultValue={props.defaultValue}
+        value={props.value || (props.type === 'number' && !props.defaultValue ? '' : props.value)}
+        onChange={props.onChange}
+        onFocus={focusInput}
+        onBlur={blurInput}
+      >
+      </input>
+    </span>
+  );
 }
 
 export default CustomInput;

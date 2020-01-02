@@ -5,15 +5,12 @@ interface CustomButtonGroupProps {
   
 }
 
-class CustomButtonGroup extends React.Component<CustomButtonGroupProps, {}> {
-
-  render() {
-    return (
-      <span className="button-group">
-        {this.props.children}
-      </span>
-    );
-  }
+const CustomButtonGroup: React.FC<CustomButtonGroupProps> = (props) => {
+  return (
+    <span className="button-group">
+      {props.children}
+    </span>
+  );
 }
 
 export default CustomButtonGroup;

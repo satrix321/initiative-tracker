@@ -9,21 +9,18 @@ interface CustomButtonProps {
   onClick: () => void,
 }
 
-class CustomButton extends React.Component<CustomButtonProps, {}> {
-
-  render() {
-    return (
-      <button
-        className={`button ${this.props.icon ? 'button--icon' : ''}
-          ${this.props.clicked ? 'button--is-clicked' : ''}
-          ${this.props.secondary ? 'button--is-secondary' : ''}`}
-        onClick={this.props.onClick}
-        aria-label={this.props.ariaLabel}
-      >
-        {this.props.children}
-      </button>
-    );
-  }
+const CustomButton: React.FC<CustomButtonProps> = (props) => {
+  return (
+    <button
+      className={`button ${props.icon ? 'button--icon' : ''}
+        ${props.clicked ? 'button--is-clicked' : ''}
+        ${props.secondary ? 'button--is-secondary' : ''}`}
+      onClick={props.onClick}
+      aria-label={props.ariaLabel}
+    >
+      {props.children}
+    </button>
+  );
 }
 
 export default CustomButton;

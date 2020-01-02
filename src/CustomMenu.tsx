@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './CustomMenu.scss';
 import './CustomButton.scss';
 
@@ -8,42 +8,27 @@ interface CustomMenuProps {
   activatorContent?: any,
 }
 
-class CustomMenu extends React.Component<CustomMenuProps, {}> {
-  state: {
-    active: boolean,
-  };
+const CustomMenu: React.FC<CustomMenuProps> = (props) => {
+  const [active, setActive] = useState(false);
 
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      active: false,
-    };
-  }
-
-  render() {
-    return (
-      <div className="menu">
-        <div className="menu__activator">
-          <button
-            className={`button ${this.props.activatorIcon ? 'button--icon' : ''}
-              ${this.state.active ? 'button--is-clicked' : ''}
-              ${this.props.activatorSecondary ? 'button--is-secondary' : ''}`
-            }
-            onClick={this.activatorClick}
-          >
-            {this.props.activatorContent}
-          </button>
-        </div>
-        <div className={`menu__content ${this.state.active ? 'menu__content--active' : ''}`}>
-          {this.props.children}
-        </div>
+  return (
+    <div className="menu">
+      <div className="menu__activator">
+        <button
+          className={`button ${props.activatorIcon ? 'button--icon' : ''}
+            ${active ? 'button--is-clicked' : ''}
+            ${props.activatorSecondary ? 'button--is-secondary' : ''}`
+          }
+          onClick={() => setActive(!active)}
+        >
+          {props.activatorContent}
+        </button>
       </div>
-    );
-  }
-
-  activatorClick = () => {
-    this.setState({ active: !this.state.active });
-  }
+      <div className={`menu__content ${active ? 'menu__content--active' : ''}`}>
+        {props.children}
+      </div>
+    </div>
+  );
 }
 
 export default CustomMenu;
