@@ -115,7 +115,7 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
     setIsGunReady(!isGunReady);
   }
 
-  const opacity = isDragging ? 0 : 1;
+  const opacity = isDragging ? 0.5 : 1;
 
   drag(drop(entryRef));
 
@@ -187,24 +187,6 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
       </div>
       <div className="initiative-tracker__actions-column">
         <div className="initiative-tracker__actions-container initiative-tracker__actions-container--desktop-only">
-          {/* <CustomButtonGroup>
-            <CustomButton
-              icon
-              secondary
-              onClick={props.onMoveEntryUp.bind(undefined, props.id)}
-              ariaLabel="Move up"
-            >
-              <FaChevronUp />
-            </CustomButton>
-            <CustomButton
-              icon
-              secondary
-              onClick={props.onMoveEntryDown.bind(undefined, props.id)}
-              ariaLabel="Move down"
-            >
-              <FaChevronDown />
-            </CustomButton>
-          </CustomButtonGroup> */}
           <CustomButton
             icon
             secondary
@@ -233,24 +215,6 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
           </CustomButton>
         </div>
         <div className="initiative-tracker__actions-container initiative-tracker__actions-container--mobile-only">
-          {/* <CustomButtonGroup>
-            <CustomButton
-              icon
-              secondary
-              onClick={props.onMoveEntryUp.bind({}, props.id)}
-              ariaLabel="Move up"
-            >
-              <FaChevronUp />
-            </CustomButton>
-            <CustomButton
-              icon
-              secondary
-              onClick={props.onMoveEntryDown.bind({}, props.id)}
-              ariaLabel="Move down"
-            >
-              <FaChevronDown />
-            </CustomButton>
-          </CustomButtonGroup> */}
           <CustomMenu
             activatorIcon
             activatorSecondary
