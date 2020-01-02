@@ -1,24 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import './InitiativeTracker.scss';
 
 import { FaLongArrowAltDown } from "react-icons/fa";
 import { FaSortAmountDown } from "react-icons/fa";
 import { FaTimes } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
-import { FaChevronDown } from "react-icons/fa";
-import { FaChevronUp } from "react-icons/fa";
-import { FaPen } from "react-icons/fa";
-import { GiPistolGun } from "react-icons/gi";
 
 import CustomInput from './CustomInput';
 import CustomButton from './CustomButton';
-import CustomButtonGroup from './CustomButtonGroup';
-import CustomMenu from './CustomMenu';
-import CustomMenuItem from './CustomMenuItem';
+import InitiativeTrackerEntry from './InitiativeTrackerEntry';
+import update from 'immutability-helper';
 
-import { useDrag, useDrop, DragObjectWithType } from 'react-dnd'
-
-class InitiativeTrackerEntry {
+class TrackerEntry {
   id: number;
   name: string;
   hp: string;
@@ -46,7 +39,7 @@ const InitiativeTracker: React.FC = () => {
   const [editedEntryName, setEditedEntryName] = useState('');
   const [editedEntryHp, setEditedEntryHp] = useState('');
   const [editedEntryInitiative, setEditedEntryInitiative] = useState(0);
-  const [entries, setEntries] = useState<InitiativeTrackerEntry[]>([]);
+  const [entries, setEntries] = useState<TrackerEntry[]>([]);
 
   const handleTurn = () => {
     if (entries.length > 0) {
@@ -57,9 +50,9 @@ const InitiativeTracker: React.FC = () => {
     }
   }
 
-  const sortEntries = (entries: InitiativeTrackerEntry[]) => {
+  const sortEntries = (entries: TrackerEntry[]) => {
     if (entries.length > 0) {
-      return [...entries].sort((firstEntry: InitiativeTrackerEntry, secondEntry: InitiativeTrackerEntry) => {
+      return [...entries].sort((firstEntry: TrackerEntry, secondEntry: TrackerEntry) => {
         return (secondEntry.initiative + (secondEntry.isGunReady ? isGunReadyInitiative : 0)) - (firstEntry.initiative + (firstEntry.isGunReady ? isGunReadyInitiative : 0));
       });
     } else {
@@ -69,7 +62,7 @@ const InitiativeTracker: React.FC = () => {
 
   const addEntry = () => {
     if (newEntryName && newEntryInitiative) {
-      let newEntry = new InitiativeTrackerEntry(idCounter, newEntryName, newEntryHp, newEntryInitiative);
+      let newEntry = new TrackerEntry(idCounter, newEntryName, newEntryHp, newEntryInitiative);
       let tempArray = [...entries, newEntry];
 
       setEntries(tempArray);
@@ -81,14 +74,14 @@ const InitiativeTracker: React.FC = () => {
   }
 
   const removeEntry = (id: number) => {
-    setEntries(entries.filter((entry: InitiativeTrackerEntry) => {
+    setEntries(entries.filter((entry: TrackerEntry) => {
       return entry.id !== id;
     }))
   }
 
   const toggleEditEntry = (id: number) => {
     let tempArray = [...entries];
-    let entry = tempArray.find((entry: InitiativeTrackerEntry) => {
+    let entry = tempArray.find((entry: TrackerEntry) => {
       return entry.id === id;
     })!;
 
@@ -100,7 +93,6 @@ const InitiativeTracker: React.FC = () => {
       setEntries(tempArray);
     } else {
       entry.editMode = !entry.editMode;
-      setEntries(tempArray);
       setEditedEntryName(entry.name);
       setEditedEntryHp(entry.hp);
       setEditedEntryInitiative(entry.initiative);
@@ -109,7 +101,7 @@ const InitiativeTracker: React.FC = () => {
 
   const toggleGunReady = (id: number) => {
     let tempArray = [...entries];
-    let filteredEntry = tempArray.find((entry: InitiativeTrackerEntry) => {
+    let filteredEntry = tempArray.find((entry: TrackerEntry) => {
       return entry.id === id;
     })!;
     filteredEntry.isGunReady = !filteredEntry.isGunReady;
@@ -118,8 +110,8 @@ const InitiativeTracker: React.FC = () => {
 
   const moveEntryUp = (id: number) => {
     if (entries.length >= 2) {
-      let tempArray: InitiativeTrackerEntry[] = [...entries];
-      let entryIndex: number = entries.findIndex((entry: InitiativeTrackerEntry) => {
+      let tempArray: TrackerEntry[] = [...entries];
+      let entryIndex: number = entries.findIndex((entry: TrackerEntry) => {
         return entry.id === id;
       });
       if (entryIndex === -1) {
@@ -139,8 +131,8 @@ const InitiativeTracker: React.FC = () => {
   const moveEntryDown = (id: number) => {
     if (entries.length >= 2) {
       if (entries.length >= 2) {
-        let tempArray: InitiativeTrackerEntry[] = [...entries];
-        let entryIndex: number = entries.findIndex((entry: InitiativeTrackerEntry) => {
+        let tempArray: TrackerEntry[] = [...entries];
+        let entryIndex: number = entries.findIndex((entry: TrackerEntry) => {
           return entry.id === id;
         });
         if (entryIndex === -1) {
@@ -158,13 +150,46 @@ const InitiativeTracker: React.FC = () => {
     }
   }
 
+  const moveEntry = useCallback(
+    (dragIndex: number, hoverIndex: number) => {
+      const dragEntry = entries[dragIndex];
+      setEntries(
+        update(entries, {
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, dragEntry],
+          ],
+        }),
+      )
+    },
+    [entries],
+  )
+
   return (
     <div className="initiative-tracker">
       <div className="initiative-tracker__header">
         <span className="initiative-tracker__header-title">Initiative Tracker</span>
-        <CustomButton icon ariaLabel="Turn" onClick={handleTurn}><FaLongArrowAltDown size="1.25em" /></CustomButton>
-        <CustomButton icon ariaLabel="Sort" onClick={() => setEntries(sortEntries(entries))}><FaSortAmountDown size="1.25em" /></CustomButton>
-        <CustomButton icon ariaLabel="Clear" onClick={() => setEntries([])}><FaTimes size="1.25em" /></CustomButton>
+        <CustomButton
+          icon
+          ariaLabel="Turn"
+          onClick={handleTurn}
+        >
+          <FaLongArrowAltDown size="1.25em" />
+        </CustomButton>
+        <CustomButton
+          icon
+          ariaLabel="Sort"
+          onClick={() => setEntries(sortEntries(entries))}
+        >
+          <FaSortAmountDown size="1.25em" />
+        </CustomButton>
+        <CustomButton
+          icon
+          ariaLabel="Clear"
+          onClick={() => setEntries([])}
+        >
+          <FaTimes size="1.25em" />
+        </CustomButton>
       </div>
       <div className="initiative-tracker__body">
         {(() => {
@@ -173,158 +198,23 @@ const InitiativeTracker: React.FC = () => {
               <div style={{width: '100%'}}>
                 <div className="initiative-tracker__data">
                   {entries
-                    .map((entry: InitiativeTrackerEntry) => {
+                    .map((entry: TrackerEntry, index: number) => {
                       return (
-                        <div className="initiative-tracker__entry" key={entry.id} data-id={entry.id} id={`entry_${entry.id}`}>
-                          <div className="initiative-tracker__name-column">
-                            <div className="initiative-tracker__column-label">Name</div>
-                            <div>
-                              {(() => {
-                                if (!entry.editMode) {
-                                  return entry.name;
-                                } else {
-                                  return (
-                                    <CustomInput
-                                      fullWidth
-                                      type="text"
-                                      defaultValue={entry.name}
-                                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEditedEntryName(event.target.value)}
-                                    />
-                                  );
-                                }
-                              })()}
-                            </div>
-                          </div>
-                          <div className="initiative-tracker__hp-column">
-                            <div className="initiative-tracker__column-label">HP</div>
-                            <div>
-                              {(() => {
-                                if (!entry.editMode) {
-                                  return entry.hp;
-                                } else {
-                                  return (
-                                    <CustomInput
-                                      fullWidth
-                                      type="text"
-                                      defaultValue={entry.hp}
-                                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEditedEntryHp(event.target.value)}
-                                    />
-                                  );
-                                }
-                              })()}
-                            </div>
-                          </div>
-                          <div className="initiative-tracker__initiative-column">
-                            <div className="initiative-tracker__column-label">Initiative</div>
-                            <div>
-                              {(() => {
-                                if (!entry.editMode) {
-                                  return entry.isGunReady ? `${entry.initiative} (+${isGunReadyInitiative})` : entry.initiative;
-                                } else {
-                                  return (
-                                    <CustomInput
-                                      fullWidth
-                                      type="number"
-                                      defaultValue={entry.initiative}
-                                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEditedEntryInitiative(Number(event.target.value))}
-                                    />
-                                  );
-                                }
-                              })()}
-                            </div>
-                          </div>
-                          <div className="initiative-tracker__actions-column">
-                            <div className="initiative-tracker__actions-container initiative-tracker__actions-container--desktop-only">
-                              <CustomButtonGroup>
-                                <CustomButton
-                                  icon
-                                  secondary
-                                  onClick={moveEntryUp.bind({}, entry.id)}
-                                  ariaLabel="Move up"
-                                >
-                                  <FaChevronUp />
-                                </CustomButton>
-                                <CustomButton
-                                  icon
-                                  secondary
-                                  onClick={moveEntryDown.bind({}, entry.id)}
-                                  ariaLabel="Move down"
-                                >
-                                  <FaChevronDown />
-                                </CustomButton>
-                              </CustomButtonGroup>
-                              <CustomButton
-                                icon
-                                secondary
-                                clicked={entry.isGunReady}
-                                onClick={toggleGunReady.bind(undefined, entry.id)}
-                                ariaLabel="Gun ready"
-                              >
-                                <GiPistolGun size="1.75em" />
-                              </CustomButton>
-                              <CustomButton
-                                icon
-                                secondary
-                                clicked={entry.editMode}
-                                onClick={toggleEditEntry.bind(undefined, entry.id)}
-                                ariaLabel="Edit mode"
-                              >
-                                <FaPen size="1.25em" />
-                              </CustomButton>
-                              <CustomButton
-                                icon
-                                secondary
-                                onClick={removeEntry.bind(undefined, entry.id)}
-                                ariaLabel="Remove entry"
-                              >
-                                <FaTimes size="1.25em" />
-                              </CustomButton>
-                            </div>
-                            <div className="initiative-tracker__actions-container initiative-tracker__actions-container--mobile-only">
-                              <CustomButtonGroup>
-                                <CustomButton
-                                  icon
-                                  secondary
-                                  onClick={moveEntryUp.bind({}, entry.id)}
-                                  ariaLabel="Move up"
-                                >
-                                  <FaChevronUp />
-                                </CustomButton>
-                                <CustomButton
-                                  icon
-                                  secondary
-                                  onClick={moveEntryDown.bind({}, entry.id)}
-                                  ariaLabel="Move down"
-                                >
-                                  <FaChevronDown />
-                                </CustomButton>
-                              </CustomButtonGroup>
-                              <CustomMenu
-                                activatorIcon
-                                activatorSecondary
-                                activatorContent={<FaChevronDown size="1.25em" />}
-                              >
-                                <CustomMenuItem
-                                  onClick={toggleGunReady.bind(undefined, entry.id)}
-                                  clicked={entry.isGunReady}
-                                >
-                                  Gun
-                                </CustomMenuItem>
-                                <CustomMenuItem
-                                  onClick={toggleEditEntry.bind(undefined, entry.id)}
-                                  clicked={entry.editMode}
-                                >
-                                  Edit
-                                </CustomMenuItem>
-                                <CustomMenuItem
-                                  onClick={removeEntry.bind(undefined, entry.id)}
-                                >
-                                  Delete
-                                </CustomMenuItem>
-                              </CustomMenu>
-                            </div>
-                          </div>
-                        </div>
+                        <InitiativeTrackerEntry
+                          key={entry.id}
+                          id={entry.id}
+                          index={index}
+                          name={entry.name}
+                          hp={entry.hp}
+                          initiative={entry.initiative}
+                          isGunReady={entry.isGunReady}
+                          onToggleGunReady={toggleGunReady}
+                          onEditEntry={toggleEditEntry}
+                          onRemoveEntry={removeEntry}
+                          onMoveEntryUp={moveEntryUp}
+                          onMoveEntryDown={moveEntryDown}
+                          onMove={moveEntry}
+                        />
                       )
                     })
                   }
