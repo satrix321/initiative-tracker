@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import './InitiativeTracker.scss';
 
 import { FaLongArrowAltDown } from "react-icons/fa";
@@ -36,255 +36,90 @@ class InitiativeTrackerEntry {
   }
 }
 
-class InitiativeTracker extends React.Component {
-  idCounter: number;
-  state: {
-    addEntryName: string,
-    addEntryHp: string,
-    addEntryInitiative: number,
-    editEntryName: string,
-    editEntryHp: string,
-    editEntryInitiative: number,
-    entries: InitiativeTrackerEntry[],
-  };
-  isGunReadyInitiative: number = 50;
+const InitiativeTracker: React.FC = () => {
+  const isGunReadyInitiative = 50;
 
-  constructor(props: any) {
-    super(props);
-    this.idCounter = 0;
-    this.state = {
-      addEntryName: '',
-      addEntryHp: '',
-      addEntryInitiative: 0,
-      editEntryName: '',
-      editEntryHp: '',
-      editEntryInitiative: 0,
-      entries: [],
-    };
+  const [idCounter, setIdCounter] = useState(0);
+  const [newEntryName, setNewEntryName] = useState('');
+  const [newEntryHp, setNewEntryHp] = useState('');
+  const [newEntryInitiative, setNewEntryInitiative] = useState(0);
+  const [editedEntryName, setEditedEntryName] = useState('');
+  const [editedEntryHp, setEditedEntryHp] = useState('');
+  const [editedEntryInitiative, setEditedEntryInitiative] = useState(0);
+  const [entries, setEntries] = useState<InitiativeTrackerEntry[]>([]);
 
-    this.setAddEntryName = this.setAddEntryName.bind(this);
-    this.setAddEntryHp = this.setAddEntryHp.bind(this);
-    this.setAddEntryInitiative = this.setAddEntryInitiative.bind(this);
-
-    this.setEditEntryName = this.setEditEntryName.bind(this);
-    this.setEditEntryHp = this.setEditEntryHp.bind(this);
-    this.setEditEntryInitiative = this.setEditEntryInitiative.bind(this);
-  }
-
-  render() {
-    return (
-      <div className="initiative-tracker">
-        <div className="initiative-tracker__header">
-          <span className="initiative-tracker__header-title">Initiative Tracker</span>
-          <CustomButton icon ariaLabel="Turn" onClick={this.handleTurn}><FaLongArrowAltDown size="1.25em" /></CustomButton>
-          <CustomButton icon ariaLabel="Sort" onClick={this.handleSort}><FaSortAmountDown size="1.25em" /></CustomButton>
-          <CustomButton icon ariaLabel="Clear" onClick={this.handleClear}><FaTimes size="1.25em" /></CustomButton>
-        </div>
-        <div className="initiative-tracker__body">
-          {(() => {
-            if (this.state.entries.length > 0) {
-              return (
-                <div style={{width: '100%'}}>
-                  {this.renderEntries()}
-                </div>
-              );
-            } else {
-              return <div className="initiative-tracker__no-data">No Data</div>
-            }
-          })()}
-        </div>
-        <div className="initiative-tracker__footer">
-          <CustomInput label="Name" type="text" value={this.state.addEntryName} onChange={this.setAddEntryName}/>
-          <CustomInput label="HP" type="text" value={this.state.addEntryHp} onChange={this.setAddEntryHp}/>
-          <CustomInput label="Initiative" type="number" value={this.state.addEntryInitiative} onChange={this.setAddEntryInitiative}/>
-          <CustomButton icon onClick={this.addEntry} ariaLabel="Add record">
-            <FaPlus size="1.25em"/>
-          </CustomButton>
-        </div>
-      </div>
-    );
-  }
-
-  renderEntries() {
-    return (
-      <div className="initiative-tracker__data">
-        {this.state.entries
-          .map((entry: InitiativeTrackerEntry) => {
-            return (
-              <div className="initiative-tracker__entry" key={entry.id} data-id={entry.id} id={`entry_${entry.id}`}>
-                <div className="initiative-tracker__name-column">
-                  <div className="initiative-tracker__column-label">Name</div>
-                  <div>
-                    {(() => {
-                      if (!entry.editMode) {
-                        return entry.name;
-                      } else {
-                        return <CustomInput fullWidth type="text" defaultValue={entry.name} onChange={this.setEditEntryName}/>
-                      }
-                    })()}
-                  </div>
-                </div>
-                <div className="initiative-tracker__hp-column">
-                  <div className="initiative-tracker__column-label">HP</div>
-                  <div>
-                    {(() => {
-                      if (!entry.editMode) {
-                        return entry.hp;
-                      } else {
-                        return <CustomInput fullWidth type="text" defaultValue={entry.hp} onChange={this.setEditEntryHp}/>
-                      }
-                    })()}
-                  </div>
-                </div>
-                <div className="initiative-tracker__initiative-column">
-                  <div className="initiative-tracker__column-label">Initiative</div>
-                  <div>
-                    {(() => {
-                      if (!entry.editMode) {
-                        return entry.isGunReady ? `${entry.initiative} (+${this.isGunReadyInitiative})` : entry.initiative;
-                      } else {
-                        return <CustomInput fullWidth type="number" defaultValue={entry.initiative} onChange={this.setEditEntryInitiative}/>
-                      }
-                    })()}
-                  </div>
-                </div>
-                <div className="initiative-tracker__actions-column">
-                  <div className="initiative-tracker__actions-container initiative-tracker__actions-container--desktop-only">
-                    <CustomButtonGroup>
-                      <CustomButton
-                        icon
-                        secondary
-                        onClick={this.moveEntryUp.bind(this, entry.id)}
-                        ariaLabel="Move up"
-                      >
-                        <FaChevronUp />
-                      </CustomButton>
-                      <CustomButton
-                        icon
-                        secondary
-                        onClick={this.moveEntryDown.bind(this, entry.id)}
-                        ariaLabel="Move down"
-                      >
-                        <FaChevronDown />
-                      </CustomButton>
-                    </CustomButtonGroup>
-                    <CustomButton
-                      icon
-                      secondary
-                      clicked={entry.isGunReady}
-                      onClick={this.toggleGun.bind(this, entry.id)}
-                      ariaLabel="Gun ready"
-                    >
-                      <GiPistolGun size="1.75em" />
-                    </CustomButton>
-                    <CustomButton
-                      icon
-                      secondary
-                      clicked={entry.editMode}
-                      onClick={this.toggleEditEntry.bind(this, entry.id)}
-                      ariaLabel="Edit mode"
-                    >
-                      <FaPen size="1.25em" />
-                    </CustomButton>
-                    <CustomButton
-                      icon
-                      secondary
-                      onClick={this.removeEntry.bind(this, entry.id)}
-                      ariaLabel="Remove entry"
-                    >
-                      <FaTimes size="1.25em" />
-                    </CustomButton>
-                  </div>
-                  <div className="initiative-tracker__actions-container initiative-tracker__actions-container--mobile-only">
-                    <CustomButtonGroup>
-                      <CustomButton icon secondary onClick={this.moveEntryUp.bind(this, entry.id)} ariaLabel="Move up">
-                        <FaChevronUp />
-                      </CustomButton>
-                      <CustomButton icon secondary onClick={this.moveEntryDown.bind(this, entry.id)} ariaLabel="Move down">
-                        <FaChevronDown />
-                      </CustomButton>
-                    </CustomButtonGroup>
-                    <CustomMenu
-                      activatorIcon
-                      activatorSecondary
-                      activatorContent={<FaChevronDown size="1.25em" />}
-                    >
-                      <CustomMenuItem onClick={this.toggleGun.bind(this, entry.id)} clicked={entry.isGunReady}>Gun</CustomMenuItem>
-                      <CustomMenuItem onClick={this.toggleEditEntry.bind(this, entry.id)} clicked={entry.editMode}>Edit</CustomMenuItem>
-                      <CustomMenuItem onClick={this.removeEntry.bind(this, entry.id)}>Delete</CustomMenuItem>
-                    </CustomMenu>
-                  </div>
-                </div>
-              </div>
-            )
-          })
-        }
-      </div>
-    );
-  }
-
-  setAddEntryName(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ addEntryName: event.target.value });
-  }
-
-  setAddEntryHp(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ addEntryHp: event.target.value });
-  }
-
-  setAddEntryInitiative(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ addEntryInitiative: Number(event.target.value) });
-  }
-
-  setEditEntryName(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ editEntryName: event.target.value });
-  }
-
-  setEditEntryHp(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ editEntryHp: event.target.value });
-  }
-
-  setEditEntryInitiative(event: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ editEntryInitiative: Number(event.target.value) });
-  }
-
-  addEntry = () => {
-    if (this.state.addEntryName && this.state.addEntryInitiative) {
-      let newEntry = new InitiativeTrackerEntry(this.idCounter, this.state.addEntryName, this.state.addEntryHp, this.state.addEntryInitiative);
-      let tempArray = [...this.state.entries, newEntry];
-
-      this.setState({
-        entries: tempArray,
-        addEntryName: '',
-        addEntryHp: '',
-        addEntryInitiative: 0,
-      });
-      this.idCounter++;
+  const handleTurn = () => {
+    if (entries.length > 0) {
+      let tempArray = [...entries];
+      let entry = tempArray.shift()!;
+      tempArray.push(entry);
+      setEntries(tempArray);
     }
   }
 
-  sortEntries = (entries: InitiativeTrackerEntry[]) => {
+  const sortEntries = (entries: InitiativeTrackerEntry[]) => {
     if (entries.length > 0) {
       return [...entries].sort((firstEntry: InitiativeTrackerEntry, secondEntry: InitiativeTrackerEntry) => {
-        return (secondEntry.initiative + (secondEntry.isGunReady ? this.isGunReadyInitiative : 0)) - (firstEntry.initiative + (firstEntry.isGunReady ? this.isGunReadyInitiative : 0));
+        return (secondEntry.initiative + (secondEntry.isGunReady ? isGunReadyInitiative : 0)) - (firstEntry.initiative + (firstEntry.isGunReady ? isGunReadyInitiative : 0));
       });
     } else {
       return entries;
     }
   }
 
-  toggleGun(id: number) {
-    let tempArray = [...this.state.entries];
+  const addEntry = () => {
+    if (newEntryName && newEntryInitiative) {
+      let newEntry = new InitiativeTrackerEntry(idCounter, newEntryName, newEntryHp, newEntryInitiative);
+      let tempArray = [...entries, newEntry];
+
+      setEntries(tempArray);
+      setNewEntryName('');
+      setNewEntryHp('');
+      setNewEntryInitiative(0);
+      setIdCounter(idCounter + 1);
+    }
+  }
+
+  const removeEntry = (id: number) => {
+    setEntries(entries.filter((entry: InitiativeTrackerEntry) => {
+      return entry.id !== id;
+    }))
+  }
+
+  const toggleEditEntry = (id: number) => {
+    let tempArray = [...entries];
     let entry = tempArray.find((entry: InitiativeTrackerEntry) => {
       return entry.id === id;
     })!;
-    entry.isGunReady = !entry.isGunReady;
-    this.setState({ entries: tempArray });
+
+    if (entry.editMode) {
+      entry.name = editedEntryName;
+      entry.hp = editedEntryHp;
+      entry.initiative = editedEntryInitiative;
+      entry.editMode = !entry.editMode;
+      setEntries(tempArray);
+    } else {
+      entry.editMode = !entry.editMode;
+      setEntries(tempArray);
+      setEditedEntryName(entry.name);
+      setEditedEntryHp(entry.hp);
+      setEditedEntryInitiative(entry.initiative);
+    }
   }
 
-  moveEntryUp(id: number) {
-    if (this.state.entries.length >= 2) {
-      let tempArray: InitiativeTrackerEntry[] = [...this.state.entries];
-      let entryIndex: number = this.state.entries.findIndex((entry: InitiativeTrackerEntry) => {
+  const toggleGunReady = (id: number) => {
+    let tempArray = [...entries];
+    let filteredEntry = tempArray.find((entry: InitiativeTrackerEntry) => {
+      return entry.id === id;
+    })!;
+    filteredEntry.isGunReady = !filteredEntry.isGunReady;
+    setEntries(tempArray);
+  }
+
+  const moveEntryUp = (id: number) => {
+    if (entries.length >= 2) {
+      let tempArray: InitiativeTrackerEntry[] = [...entries];
+      let entryIndex: number = entries.findIndex((entry: InitiativeTrackerEntry) => {
         return entry.id === id;
       });
       if (entryIndex === -1) {
@@ -297,20 +132,20 @@ class InitiativeTracker extends React.Component {
         let entry = tempArray.splice(entryIndex, 1);
         tempArray.splice(previousEntryIndex, 0, entry[0]);
       }
-      this.setState({ entries: tempArray })
+      setEntries(tempArray);
     }
   }
 
-  moveEntryDown(id: number) {
-    if (this.state.entries.length >= 2) {
-      if (this.state.entries.length >= 2) {
-        let tempArray: InitiativeTrackerEntry[] = [...this.state.entries];
-        let entryIndex: number = this.state.entries.findIndex((entry: InitiativeTrackerEntry) => {
+  const moveEntryDown = (id: number) => {
+    if (entries.length >= 2) {
+      if (entries.length >= 2) {
+        let tempArray: InitiativeTrackerEntry[] = [...entries];
+        let entryIndex: number = entries.findIndex((entry: InitiativeTrackerEntry) => {
           return entry.id === id;
         });
         if (entryIndex === -1) {
           return;
-        } else if (entryIndex === this.state.entries.length - 1) {
+        } else if (entryIndex === entries.length - 1) {
           let entry = tempArray.pop()!;
           tempArray.unshift(entry);
         } else {
@@ -318,64 +153,218 @@ class InitiativeTracker extends React.Component {
           let entry = tempArray.splice(nextEntryIndex, 1);
           tempArray.splice(entryIndex, 0, entry[0]);
         }
-        this.setState({ entries: tempArray })
+        setEntries(tempArray);
       }
     }
   }
 
-  removeEntry(id: number) {
-    this.setState({ 
-      entries: this.state.entries.filter((entry: InitiativeTrackerEntry) => {
-        return entry.id !== id;
-      }),
-    });
-  }
-
-  toggleEditEntry(id: number) {
-    let tempArray = [...this.state.entries];
-    let entry = tempArray.find((entry: InitiativeTrackerEntry) => {
-      return entry.id === id;
-    })!;
-
-    if (entry.editMode) {
-      entry.name = this.state.editEntryName;
-      entry.hp = this.state.editEntryHp;
-      entry.initiative = this.state.editEntryInitiative;
-      entry.editMode = !entry.editMode;
-      this.setState({ entries: tempArray });
-    } else {
-      entry.editMode = !entry.editMode;
-      this.setState({ 
-        entries: tempArray,
-        editEntryName: entry.name,
-        editEntryHp: entry.hp,
-        editEntryInitiative: entry.initiative,
-      });
-    }
-  }
-
-  handleTurn = () => {
-    if (this.state.entries.length > 0) {
-      let tempArray = [...this.state.entries];
-      let entry = tempArray.shift()!;
-      tempArray.push(entry);
-      this.setState({
-        entries: tempArray,
-      });
-    }
-  }
-
-  handleSort = () => {
-    this.setState({
-      entries: this.sortEntries(this.state.entries),
-    });
-  }
-
-  handleClear = () => {
-    this.setState({
-      entries: [],
-    });
-  }
+  return (
+    <div className="initiative-tracker">
+      <div className="initiative-tracker__header">
+        <span className="initiative-tracker__header-title">Initiative Tracker</span>
+        <CustomButton icon ariaLabel="Turn" onClick={handleTurn}><FaLongArrowAltDown size="1.25em" /></CustomButton>
+        <CustomButton icon ariaLabel="Sort" onClick={() => setEntries(sortEntries(entries))}><FaSortAmountDown size="1.25em" /></CustomButton>
+        <CustomButton icon ariaLabel="Clear" onClick={() => setEntries([])}><FaTimes size="1.25em" /></CustomButton>
+      </div>
+      <div className="initiative-tracker__body">
+        {(() => {
+          if (entries.length > 0) {
+            return (
+              <div style={{width: '100%'}}>
+                <div className="initiative-tracker__data">
+                  {entries
+                    .map((entry: InitiativeTrackerEntry) => {
+                      return (
+                        <div className="initiative-tracker__entry" key={entry.id} data-id={entry.id} id={`entry_${entry.id}`}>
+                          <div className="initiative-tracker__name-column">
+                            <div className="initiative-tracker__column-label">Name</div>
+                            <div>
+                              {(() => {
+                                if (!entry.editMode) {
+                                  return entry.name;
+                                } else {
+                                  return (
+                                    <CustomInput
+                                      fullWidth
+                                      type="text"
+                                      defaultValue={entry.name}
+                                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEditedEntryName(event.target.value)}
+                                    />
+                                  );
+                                }
+                              })()}
+                            </div>
+                          </div>
+                          <div className="initiative-tracker__hp-column">
+                            <div className="initiative-tracker__column-label">HP</div>
+                            <div>
+                              {(() => {
+                                if (!entry.editMode) {
+                                  return entry.hp;
+                                } else {
+                                  return (
+                                    <CustomInput
+                                      fullWidth
+                                      type="text"
+                                      defaultValue={entry.hp}
+                                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEditedEntryHp(event.target.value)}
+                                    />
+                                  );
+                                }
+                              })()}
+                            </div>
+                          </div>
+                          <div className="initiative-tracker__initiative-column">
+                            <div className="initiative-tracker__column-label">Initiative</div>
+                            <div>
+                              {(() => {
+                                if (!entry.editMode) {
+                                  return entry.isGunReady ? `${entry.initiative} (+${isGunReadyInitiative})` : entry.initiative;
+                                } else {
+                                  return (
+                                    <CustomInput
+                                      fullWidth
+                                      type="number"
+                                      defaultValue={entry.initiative}
+                                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEditedEntryInitiative(Number(event.target.value))}
+                                    />
+                                  );
+                                }
+                              })()}
+                            </div>
+                          </div>
+                          <div className="initiative-tracker__actions-column">
+                            <div className="initiative-tracker__actions-container initiative-tracker__actions-container--desktop-only">
+                              <CustomButtonGroup>
+                                <CustomButton
+                                  icon
+                                  secondary
+                                  onClick={moveEntryUp.bind({}, entry.id)}
+                                  ariaLabel="Move up"
+                                >
+                                  <FaChevronUp />
+                                </CustomButton>
+                                <CustomButton
+                                  icon
+                                  secondary
+                                  onClick={moveEntryDown.bind({}, entry.id)}
+                                  ariaLabel="Move down"
+                                >
+                                  <FaChevronDown />
+                                </CustomButton>
+                              </CustomButtonGroup>
+                              <CustomButton
+                                icon
+                                secondary
+                                clicked={entry.isGunReady}
+                                onClick={toggleGunReady.bind(undefined, entry.id)}
+                                ariaLabel="Gun ready"
+                              >
+                                <GiPistolGun size="1.75em" />
+                              </CustomButton>
+                              <CustomButton
+                                icon
+                                secondary
+                                clicked={entry.editMode}
+                                onClick={toggleEditEntry.bind(undefined, entry.id)}
+                                ariaLabel="Edit mode"
+                              >
+                                <FaPen size="1.25em" />
+                              </CustomButton>
+                              <CustomButton
+                                icon
+                                secondary
+                                onClick={removeEntry.bind(undefined, entry.id)}
+                                ariaLabel="Remove entry"
+                              >
+                                <FaTimes size="1.25em" />
+                              </CustomButton>
+                            </div>
+                            <div className="initiative-tracker__actions-container initiative-tracker__actions-container--mobile-only">
+                              <CustomButtonGroup>
+                                <CustomButton
+                                  icon
+                                  secondary
+                                  onClick={moveEntryUp.bind({}, entry.id)}
+                                  ariaLabel="Move up"
+                                >
+                                  <FaChevronUp />
+                                </CustomButton>
+                                <CustomButton
+                                  icon
+                                  secondary
+                                  onClick={moveEntryDown.bind({}, entry.id)}
+                                  ariaLabel="Move down"
+                                >
+                                  <FaChevronDown />
+                                </CustomButton>
+                              </CustomButtonGroup>
+                              <CustomMenu
+                                activatorIcon
+                                activatorSecondary
+                                activatorContent={<FaChevronDown size="1.25em" />}
+                              >
+                                <CustomMenuItem
+                                  onClick={toggleGunReady.bind(undefined, entry.id)}
+                                  clicked={entry.isGunReady}
+                                >
+                                  Gun
+                                </CustomMenuItem>
+                                <CustomMenuItem
+                                  onClick={toggleEditEntry.bind(undefined, entry.id)}
+                                  clicked={entry.editMode}
+                                >
+                                  Edit
+                                </CustomMenuItem>
+                                <CustomMenuItem
+                                  onClick={removeEntry.bind(undefined, entry.id)}
+                                >
+                                  Delete
+                                </CustomMenuItem>
+                              </CustomMenu>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })
+                  }
+                </div>
+              </div>
+            );
+          } else {
+            return <div className="initiative-tracker__no-data">No Data</div>
+          }
+        })()}
+      </div>
+      <div className="initiative-tracker__footer">
+        <CustomInput
+          label="Name"
+          type="text"
+          value={newEntryName}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => setNewEntryName(event.target.value)}
+        />
+        <CustomInput
+          label="HP"
+          type="text"
+          value={newEntryHp}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => setNewEntryHp(event.target.value)}
+        />
+        <CustomInput
+          label="Initiative"
+          type="number"
+          value={newEntryInitiative}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => setNewEntryInitiative(Number(event.target.value))}
+        />
+        <CustomButton
+          icon
+          onClick={addEntry}
+          ariaLabel="Add record"
+        >
+          <FaPlus size="1.25em"/>
+        </CustomButton>
+      </div>
+    </div>
+  );
 }
 
 export default InitiativeTracker;
