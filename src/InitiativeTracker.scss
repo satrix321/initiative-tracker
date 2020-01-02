@@ -29,24 +29,53 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 80px;
+      height: 40px;
     }
 
-    .initiative-tracker__table {
+    .initiative-tracker__data {
       width: 100%;
       border-spacing: 0;
 
-      thead th {
+      .initiative-tracker__entry {
+        display: flex;
         height: 40px;
-      }
 
-      th,
-      td {
-        padding: 0 $spacing-1;
-      }
+        .initiative-tracker__name-column,
+        .initiative-tracker__hp-column,
+        .initiative-tracker__initiative-column,
+        .initiative-tracker__actions-column {
+          padding: 0 $spacing-1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
 
-      tbody tr:nth-child(odd) {
-        background-color: $light-3-grey;
+        .initiative-tracker__name-column {
+          flex-grow: 1;
+        }
+
+        .initiative-tracker__hp-column {
+          flex-grow: 0;
+          width: 70px;
+        }
+
+        .initiative-tracker__initiative-column {
+          flex-grow: 0;
+          width: 70px;
+        }
+
+        .initiative-tracker__actions-column {
+          flex-grow: 0;
+        }
+
+        .initiative-tracker__column-label {
+          font-size: $font-size-10;
+          color: $dark-3-grey;
+        }
+
+        &:nth-child(odd) {
+          background-color: $light-3-grey;
+        }
       }
 
       .initiative-tracker__hp-header {

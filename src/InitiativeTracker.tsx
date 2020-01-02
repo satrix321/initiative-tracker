@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import './InitiativeTracker.scss';
-import { IoIosArrowUp } from "react-icons/io";
-import { IoIosArrowDown } from "react-icons/io";
-import { IoIosClose } from "react-icons/io";
-import { IoIosAdd } from "react-icons/io";
-import { IoMdCreate } from "react-icons/io";
+
+import { FaLongArrowAltDown } from "react-icons/fa";
+import { FaSortAmountDown } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
+import { FaChevronDown } from "react-icons/fa";
+import { FaChevronUp } from "react-icons/fa";
+import { FaPen } from "react-icons/fa";
 import { GiPistolGun } from "react-icons/gi";
 
 import CustomInput from './CustomInput';
@@ -12,6 +15,8 @@ import CustomButton from './CustomButton';
 import CustomButtonGroup from './CustomButtonGroup';
 import CustomMenu from './CustomMenu';
 import CustomMenuItem from './CustomMenuItem';
+
+import { useDrag, useDrop, DragObjectWithType } from 'react-dnd'
 
 class InitiativeTrackerEntry {
   id: number;
@@ -71,25 +76,17 @@ class InitiativeTracker extends React.Component {
       <div className="initiative-tracker">
         <div className="initiative-tracker__header">
           <span className="initiative-tracker__header-title">Initiative Tracker</span>
-          <CustomButton onClick={this.handleTurn}>Turn</CustomButton>
-          <CustomButton onClick={this.handleSort}>Sort</CustomButton>
-          <CustomButton onClick={this.handleClear}>Clear</CustomButton>
+          <CustomButton icon ariaLabel="Turn" onClick={this.handleTurn}><FaLongArrowAltDown size="1.25em" /></CustomButton>
+          <CustomButton icon ariaLabel="Sort" onClick={this.handleSort}><FaSortAmountDown size="1.25em" /></CustomButton>
+          <CustomButton icon ariaLabel="Clear" onClick={this.handleClear}><FaTimes size="1.25em" /></CustomButton>
         </div>
         <div className="initiative-tracker__body">
           {(() => {
             if (this.state.entries.length > 0) {
               return (
-                <table className="initiative-tracker__table" cellPadding="0">
-                  <thead>
-                    <tr>
-                      <th align="left">Name</th>
-                      <th align="left" className="initiative-tracker__hp-header">HP</th>
-                      <th align="left" className="initiative-tracker__initiative-header">Initiative</th>
-                      <th className="initiative-tracker__actions-header">Actions</th>
-                    </tr>
-                  </thead>
+                <div style={{width: '100%'}}>
                   {this.renderEntries()}
-                </table>
+                </div>
               );
             } else {
               return <div className="initiative-tracker__no-data">No Data</div>
@@ -101,7 +98,7 @@ class InitiativeTracker extends React.Component {
           <CustomInput label="HP" type="text" value={this.state.addEntryHp} onChange={this.setAddEntryHp}/>
           <CustomInput label="Initiative" type="number" value={this.state.addEntryInitiative} onChange={this.setAddEntryInitiative}/>
           <CustomButton icon onClick={this.addEntry} ariaLabel="Add record">
-            <IoIosAdd size="2em"/>
+            <FaPlus size="1.25em"/>
           </CustomButton>
         </div>
       </div>
@@ -110,108 +107,119 @@ class InitiativeTracker extends React.Component {
 
   renderEntries() {
     return (
-      <tbody>
+      <div className="initiative-tracker__data">
         {this.state.entries
-          .map((entry: InitiativeTrackerEntry) => (
-            <tr key={entry.id} data-id={entry.id} id={`entry_${entry.id}`}>
-              <td>
-                {(() => {
-                  if (!entry.editMode) {
-                    return entry.name;
-                  } else {
-                    return <CustomInput fullWidth type="text" defaultValue={entry.name} onChange={this.setEditEntryName}/>
-                  }
-                })()}
-              </td>
-              <td>
-                {(() => {
-                  if (!entry.editMode) {
-                    return entry.hp;
-                  } else {
-                    return <CustomInput fullWidth type="text" defaultValue={entry.hp} onChange={this.setEditEntryHp}/>
-                  }
-                })()}
-              </td>
-              <td>
-                {(() => {
-                  if (!entry.editMode) {
-                    return entry.isGunReady ? `${entry.initiative} (+${this.isGunReadyInitiative})` : entry.initiative;
-                  } else {
-                    return <CustomInput fullWidth type="number" defaultValue={entry.initiative} onChange={this.setEditEntryInitiative}/>
-                  }
-                })()}
-              </td>
-              <td>
-                <div className="initiative-tracker__actions-container initiative-tracker__actions-container--desktop-only">
-                  <CustomButton
-                    icon
-                    secondary
-                    clicked={entry.isGunReady}
-                    onClick={this.toggleGun.bind(this, entry.id)}
-                    ariaLabel="Gun ready"
-                  >
-                    <GiPistolGun size="1.5em" />
-                  </CustomButton>
-                  <CustomButtonGroup>
+          .map((entry: InitiativeTrackerEntry) => {
+            return (
+              <div className="initiative-tracker__entry" key={entry.id} data-id={entry.id} id={`entry_${entry.id}`}>
+                <div className="initiative-tracker__name-column">
+                  <div className="initiative-tracker__column-label">Name</div>
+                  <div>
+                    {(() => {
+                      if (!entry.editMode) {
+                        return entry.name;
+                      } else {
+                        return <CustomInput fullWidth type="text" defaultValue={entry.name} onChange={this.setEditEntryName}/>
+                      }
+                    })()}
+                  </div>
+                </div>
+                <div className="initiative-tracker__hp-column">
+                  <div className="initiative-tracker__column-label">HP</div>
+                  <div>
+                    {(() => {
+                      if (!entry.editMode) {
+                        return entry.hp;
+                      } else {
+                        return <CustomInput fullWidth type="text" defaultValue={entry.hp} onChange={this.setEditEntryHp}/>
+                      }
+                    })()}
+                  </div>
+                </div>
+                <div className="initiative-tracker__initiative-column">
+                  <div className="initiative-tracker__column-label">Initiative</div>
+                  <div>
+                    {(() => {
+                      if (!entry.editMode) {
+                        return entry.isGunReady ? `${entry.initiative} (+${this.isGunReadyInitiative})` : entry.initiative;
+                      } else {
+                        return <CustomInput fullWidth type="number" defaultValue={entry.initiative} onChange={this.setEditEntryInitiative}/>
+                      }
+                    })()}
+                  </div>
+                </div>
+                <div className="initiative-tracker__actions-column">
+                  <div className="initiative-tracker__actions-container initiative-tracker__actions-container--desktop-only">
+                    <CustomButtonGroup>
+                      <CustomButton
+                        icon
+                        secondary
+                        onClick={this.moveEntryUp.bind(this, entry.id)}
+                        ariaLabel="Move up"
+                      >
+                        <FaChevronUp />
+                      </CustomButton>
+                      <CustomButton
+                        icon
+                        secondary
+                        onClick={this.moveEntryDown.bind(this, entry.id)}
+                        ariaLabel="Move down"
+                      >
+                        <FaChevronDown />
+                      </CustomButton>
+                    </CustomButtonGroup>
                     <CustomButton
                       icon
                       secondary
-                      onClick={this.moveEntryUp.bind(this, entry.id)}
-                      ariaLabel="Move up"
+                      clicked={entry.isGunReady}
+                      onClick={this.toggleGun.bind(this, entry.id)}
+                      ariaLabel="Gun ready"
                     >
-                      <IoIosArrowUp />
+                      <GiPistolGun size="1.75em" />
                     </CustomButton>
                     <CustomButton
                       icon
                       secondary
-                      onClick={this.moveEntryDown.bind(this, entry.id)}
-                      ariaLabel="Move down"
+                      clicked={entry.editMode}
+                      onClick={this.toggleEditEntry.bind(this, entry.id)}
+                      ariaLabel="Edit mode"
                     >
-                      <IoIosArrowDown />
+                      <FaPen size="1.25em" />
                     </CustomButton>
-                  </CustomButtonGroup>
-                  <CustomButton
-                    icon
-                    secondary
-                    clicked={entry.editMode}
-                    onClick={this.toggleEditEntry.bind(this, entry.id)}
-                    ariaLabel="Edit mode"
-                  >
-                    <IoMdCreate size="1.5em" />
-                  </CustomButton>
-                  <CustomButton
-                    icon
-                    secondary
-                    onClick={this.removeEntry.bind(this, entry.id)}
-                    ariaLabel="Remove entry"
-                  >
-                    <IoIosClose size="2em" />
-                  </CustomButton>
+                    <CustomButton
+                      icon
+                      secondary
+                      onClick={this.removeEntry.bind(this, entry.id)}
+                      ariaLabel="Remove entry"
+                    >
+                      <FaTimes size="1.25em" />
+                    </CustomButton>
+                  </div>
+                  <div className="initiative-tracker__actions-container initiative-tracker__actions-container--mobile-only">
+                    <CustomButtonGroup>
+                      <CustomButton icon secondary onClick={this.moveEntryUp.bind(this, entry.id)} ariaLabel="Move up">
+                        <FaChevronUp />
+                      </CustomButton>
+                      <CustomButton icon secondary onClick={this.moveEntryDown.bind(this, entry.id)} ariaLabel="Move down">
+                        <FaChevronDown />
+                      </CustomButton>
+                    </CustomButtonGroup>
+                    <CustomMenu
+                      activatorIcon
+                      activatorSecondary
+                      activatorContent={<FaChevronDown size="1.25em" />}
+                    >
+                      <CustomMenuItem onClick={this.toggleGun.bind(this, entry.id)} clicked={entry.isGunReady}>Gun</CustomMenuItem>
+                      <CustomMenuItem onClick={this.toggleEditEntry.bind(this, entry.id)} clicked={entry.editMode}>Edit</CustomMenuItem>
+                      <CustomMenuItem onClick={this.removeEntry.bind(this, entry.id)}>Delete</CustomMenuItem>
+                    </CustomMenu>
+                  </div>
                 </div>
-                <div className="initiative-tracker__actions-container initiative-tracker__actions-container--mobile-only">
-                  <CustomButtonGroup>
-                    <CustomButton icon secondary onClick={this.moveEntryUp.bind(this, entry.id)} ariaLabel="Move up">
-                      <IoIosArrowUp />
-                    </CustomButton>
-                    <CustomButton icon secondary onClick={this.moveEntryDown.bind(this, entry.id)} ariaLabel="Move down">
-                      <IoIosArrowDown />
-                    </CustomButton>
-                  </CustomButtonGroup>
-                  <CustomMenu
-                    activatorIcon
-                    activatorSecondary
-                    activatorContent={<IoIosArrowDown size="1.5em" />}
-                  >
-                    <CustomMenuItem onClick={this.toggleGun.bind(this, entry.id)} clicked={entry.isGunReady}>Gun</CustomMenuItem>
-                    <CustomMenuItem onClick={this.toggleEditEntry.bind(this, entry.id)} clicked={entry.editMode}>Edit</CustomMenuItem>
-                    <CustomMenuItem onClick={this.removeEntry.bind(this, entry.id)}>Delete</CustomMenuItem>
-                  </CustomMenu>
-                </div>
-              </td>
-            </tr>
-          ))
+              </div>
+            )
+          })
         }
-      </tbody>
+      </div>
     );
   }
 
