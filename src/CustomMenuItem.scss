@@ -7,6 +7,7 @@
   height: $spacing-6;
   padding: 0 $spacing-3;
   min-width: $spacing-8;
+  width: max-content;
   cursor: pointer;
   transition: background .3s ease-out;
   user-select: none;
@@ -16,10 +17,10 @@
   }
 
   &.menu-item--is-clicked {
-    background: $light-1-grey;
+    background: $dark-1-grey;
 
     &:hover {
-      background: $light-2-grey;
+      background: $light-1-grey;
     }
   }
 }

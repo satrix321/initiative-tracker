@@ -5,10 +5,14 @@ import { FaLongArrowAltDown } from "react-icons/fa";
 import { FaSortAmountDown } from "react-icons/fa";
 import { FaTimes } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
+import { FaCog } from "react-icons/fa";
 
 import CustomInput from './CustomInput';
 import CustomButton from './CustomButton';
+import CustomMenu from './CustomMenu';
+import CustomMenuItem from './CustomMenuItem';
 import InitiativeTrackerEntry from './InitiativeTrackerEntry';
+
 import update from 'immutability-helper';
 
 class TrackerEntry {
@@ -31,6 +35,8 @@ class TrackerEntry {
 
 const InitiativeTracker: React.FC = () => {
   const isGunReadyInitiative = 50;
+
+  const [gunReadinessEnabled, setGunReadinessEnabled] = useState(false);
 
   const [idCounter, setIdCounter] = useState(0);
   const [newEntryName, setNewEntryName] = useState('');
@@ -190,6 +196,17 @@ const InitiativeTracker: React.FC = () => {
         >
           <FaTimes size="1.25em" />
         </CustomButton>
+        <CustomMenu
+          activatorIcon
+          activatorContent={<FaCog size="1.25em" />}
+        >
+          <CustomMenuItem
+            onClick={() => {setGunReadinessEnabled(!gunReadinessEnabled)}}
+            clicked={gunReadinessEnabled}
+          >
+            Call of Cthulhu
+          </CustomMenuItem>
+        </CustomMenu>
       </div>
       <div className="initiative-tracker__body">
         {(() => {
@@ -208,6 +225,7 @@ const InitiativeTracker: React.FC = () => {
                           hp={entry.hp}
                           initiative={entry.initiative}
                           isGunReady={entry.isGunReady}
+                          gunReadinessEnabled={gunReadinessEnabled}
                           onToggleGunReady={toggleGunReady}
                           onEditEntry={toggleEditEntry}
                           onRemoveEntry={removeEntry}

@@ -27,6 +27,7 @@ interface InitiativeTrackerEntryProps {
   hp: string;
   initiative: number;
   isGunReady: boolean;
+  gunReadinessEnabled: boolean;
 
   onToggleGunReady: (id: number) => void;
   onEditEntry: (id: number, name: string, hp: string, initiative: number, isGunReady: boolean) => void;
@@ -104,9 +105,9 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
       props.onEditEntry(props.id, editedEntryName, editedEntryHp, editedEntryInitiative, props.isGunReady);
     } else {
       setIsEditMode(!isEditMode);
-      setEditedEntryName(props.name);
-      setEditedEntryHp(props.hp);
-      setEditedEntryInitiative(props.initiative);
+      setEditedEntryName(name);
+      setEditedEntryHp(hp);
+      setEditedEntryInitiative(initiative);
     }
   }
 
@@ -171,7 +172,7 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
         <div>
           {(() => {
             if (!isEditMode) {
-              return isGunReady ? `${initiative} (+${isGunReadyInitiative})` : initiative;
+              return isGunReady && props.gunReadinessEnabled ? `${initiative} (+${isGunReadyInitiative})` : initiative;
             } else {
               return (
                 <CustomInput
@@ -187,15 +188,23 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
       </div>
       <div className="initiative-tracker__actions-column">
         <div className="initiative-tracker__actions-container initiative-tracker__actions-container--desktop-only">
-          <CustomButton
-            icon
-            secondary
-            clicked={isGunReady}
-            onClick={onToggleGunReady}
-            ariaLabel="Gun ready"
-          >
-            <GiPistolGun size="1.75em" />
-          </CustomButton>
+          {(() => {
+            if (props.gunReadinessEnabled) {
+              return (
+                <CustomButton
+                  icon
+                  secondary
+                  clicked={isGunReady}
+                  onClick={onToggleGunReady}
+                  ariaLabel="Gun ready"
+                >
+                  <GiPistolGun size="1.75em" />
+                </CustomButton>
+              );
+            } else {
+              return <></>
+            }
+          })()}
           <CustomButton
             icon
             secondary
@@ -220,12 +229,18 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
             activatorSecondary
             activatorContent={<FaChevronDown size="1.25em" />}
           >
-            <CustomMenuItem
-              onClick={onToggleGunReady}
-              clicked={isGunReady}
-            >
-              Gun
-            </CustomMenuItem>
+            {(() => {
+              if (props.gunReadinessEnabled) {
+                return (
+                  <CustomMenuItem
+                    onClick={onToggleGunReady}
+                    clicked={isGunReady}
+                  >
+                    Gun
+                  </CustomMenuItem>
+                );
+              }
+            })()}
             <CustomMenuItem
               onClick={onToggleEditEntry}
               clicked={isEditMode}
