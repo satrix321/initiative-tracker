@@ -23,7 +23,7 @@ const HTML5toTouch = {
 
 const App: React.FC = () => {
   return (
-    <div style={{maxWidth: 700, margin: 'auto'}}>
+    <div style={{maxWidth: 800, margin: 'auto'}}>
       <DndProvider backend={MultiBackend} options={HTML5toTouch}>
         <InitiativeTracker />
       </DndProvider>

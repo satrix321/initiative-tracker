@@ -29,7 +29,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 40px;
+      height: $spacing-7;
     }
 
     .initiative-tracker__data {
@@ -38,7 +38,7 @@
 
       .initiative-tracker__entry {
         display: flex;
-        height: 40px;
+        height: $spacing-7;
 
         .initiative-tracker__name-column,
         .initiative-tracker__hp-column,
@@ -56,12 +56,12 @@
 
         .initiative-tracker__hp-column {
           flex-grow: 0;
-          width: 70px;
+          width: $spacing-9;
         }
 
         .initiative-tracker__initiative-column {
           flex-grow: 0;
-          width: 70px;
+          width: $spacing-9;
         }
 
         .initiative-tracker__actions-column {
@@ -80,12 +80,12 @@
 
       .initiative-tracker__hp-header {
         width: 1px;
-        min-width: 70px;
+        min-width: $spacing-9;
       }
 
       .initiative-tracker__initiative-header {
         width: 1px;
-        min-width: 70px;
+        min-width: $spacing-9;
       }
 
       .initiative-tracker__actions-header {
@@ -99,13 +99,15 @@
         padding: 0;
 
         &.initiative-tracker__actions-container--desktop-only {
-          @media screen and (max-width: 599px) {
-            display: none;
+          display: none;
+          @media screen and (min-width: $spacing-15) {
+            display: flex;
           }
         }
 
         &.initiative-tracker__actions-container--mobile-only {
-          @media screen and (min-width: 600px) {
+          display: flex;
+          @media screen and (min-width: $spacing-15) {
             display: none;
           }
         }

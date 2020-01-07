@@ -8,7 +8,7 @@
   cursor: pointer;
   height: $spacing-6;
   margin: $spacing-1;
-  width: 100px;
+  width: $spacing-9;
   transition: background-color .3s ease-out;
 
   &::-moz-focus-inner {
