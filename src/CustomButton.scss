@@ -30,6 +30,11 @@
     background-color: $dark-2-primary;
   }
 
+  &.button--is-disabled {
+    background-color: $dark-2-grey;
+    cursor: default;
+  }
+
   &.button--icon {
     width: $spacing-6;
     padding: 0;

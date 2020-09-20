@@ -196,7 +196,7 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
                   secondary
                   clicked={isGunReady}
                   onClick={onToggleGunReady}
-                  ariaLabel="Gun ready"
+                  title="Gun ready"
                 >
                   <GiPistolGun size="1.75em" />
                 </CustomButton>
@@ -210,7 +210,7 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
             secondary
             clicked={isEditMode}
             onClick={onToggleEditEntry}
-            ariaLabel="Edit mode"
+            title="Edit mode"
           >
             <FaPen size="1.25em" />
           </CustomButton>
@@ -218,7 +218,7 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
             icon
             secondary
             onClick={props.onRemoveEntry.bind(undefined, props.id)}
-            ariaLabel="Remove entry"
+            title="Remove entry"
           >
             <FaTimes size="1.25em" />
           </CustomButton>

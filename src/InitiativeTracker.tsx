@@ -177,21 +177,24 @@ const InitiativeTracker: React.FC = () => {
         <span className="initiative-tracker__header-title">Initiative Tracker</span>
         <CustomButton
           icon
-          ariaLabel="Turn"
+          disabled={entries.length < 2}
+          title="Turn"
           onClick={handleTurn}
         >
           <FaLongArrowAltDown size="1.25em" />
         </CustomButton>
         <CustomButton
           icon
-          ariaLabel="Sort"
+          disabled={entries.length === 0}
+          title="Sort"
           onClick={() => setEntries(sortEntries(entries))}
         >
           <FaSortAmountDown size="1.25em" />
         </CustomButton>
         <CustomButton
           icon
-          ariaLabel="Clear"
+          disabled={entries.length === 0}
+          title="Clear"
           onClick={() => setEntries([])}
         >
           <FaTimes size="1.25em" />
@@ -265,8 +268,9 @@ const InitiativeTracker: React.FC = () => {
         />
         <CustomButton
           icon
+          disabled={!Boolean(newEntryName) || !Boolean(newEntryInitiative)}
           onClick={addEntry}
-          ariaLabel="Add record"
+          title="Add record"
         >
           <FaPlus size="1.25em"/>
         </CustomButton>

@@ -5,7 +5,8 @@ interface CustomButtonProps {
   icon?: boolean,
   secondary?: boolean,
   clicked?: boolean,
-  ariaLabel?: string,
+  disabled?: boolean,
+  title?: string,
   onClick: () => void,
 }
 
@@ -14,9 +15,13 @@ const CustomButton: React.FC<CustomButtonProps> = (props) => {
     <button
       className={`button ${props.icon ? 'button--icon' : ''}
         ${props.clicked ? 'button--is-clicked' : ''}
-        ${props.secondary ? 'button--is-secondary' : ''}`}
+        ${props.secondary ? 'button--is-secondary' : ''}
+        ${props.disabled ? 'button--is-disabled' : ''}
+      `}
       onClick={props.onClick}
-      aria-label={props.ariaLabel}
+      aria-label={props.title}
+      disabled={props.disabled}
+      title={props.title}
     >
       {props.children}
     </button>
