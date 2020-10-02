@@ -30,7 +30,7 @@ interface InitiativeTrackerEntryProps {
   gunReadinessEnabled: boolean;
 
   onToggleGunReady: (id: number) => void;
-  onEditEntry: (id: number, name: string, hp: string, initiative: number, isGunReady: boolean) => void;
+  onEditEntry: (id: number, name: string, hp: string, initiative: number) => void;
   onRemoveEntry: (id: number) => void;
   onMoveEntryUp: (id: number) => void;
   onMoveEntryDown: (id: number) => void;
@@ -40,15 +40,10 @@ interface InitiativeTrackerEntryProps {
 const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) => {
   const isGunReadyInitiative = 50;
 
-  const [name, setName] = useState(props.name);
-  const [hp, setHp] = useState(props.hp);
-  const [initiative, setinitiative] = useState(props.initiative);
-  const [isGunReady, setIsGunReady] = useState(props.isGunReady);
-
   const [isEditMode, setIsEditMode] = useState(false);
-  const [editedEntryName, setEditedEntryName] = useState('');
-  const [editedEntryHp, setEditedEntryHp] = useState('');
-  const [editedEntryInitiative, setEditedEntryInitiative] = useState(0);
+  const [editedEntryName, setEditedEntryName] = useState(props.name);
+  const [editedEntryHp, setEditedEntryHp] = useState(props.hp);
+  const [editedEntryInitiative, setEditedEntryInitiative] = useState(props.initiative);
 
   const entryRef = useRef<HTMLDivElement>(null);
 
@@ -98,22 +93,15 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
 
   const onToggleEditEntry = () => {
     if (isEditMode) {
-      setName(editedEntryName);
-      setHp(editedEntryHp);
-      setinitiative(editedEntryInitiative);
       setIsEditMode(!isEditMode);
-      props.onEditEntry(props.id, editedEntryName, editedEntryHp, editedEntryInitiative, props.isGunReady);
+      props.onEditEntry(props.id, editedEntryName, editedEntryHp, editedEntryInitiative);
     } else {
       setIsEditMode(!isEditMode);
-      setEditedEntryName(name);
-      setEditedEntryHp(hp);
-      setEditedEntryInitiative(initiative);
     }
   }
 
   const onToggleGunReady = () => {
     props.onToggleGunReady(props.id);
-    setIsGunReady(!isGunReady);
   }
 
   const opacity = isDragging ? 0.5 : 1;
@@ -134,13 +122,13 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
         <div>
           {(() => {
             if (!isEditMode) {
-              return name;
+              return props.name;
             } else {
               return (
                 <CustomInput
                   fullWidth
                   type="text"
-                  defaultValue={name}
+                  defaultValue={props.name}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEditedEntryName(event.target.value)}
                 />
               );
@@ -153,13 +141,13 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
         <div>
           {(() => {
             if (!isEditMode) {
-              return hp;
+              return props.hp;
             } else {
               return (
                 <CustomInput
                   fullWidth
                   type="text"
-                  defaultValue={hp}
+                  defaultValue={props.hp}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEditedEntryHp(event.target.value)}
                 />
               );
@@ -172,13 +160,13 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
         <div>
           {(() => {
             if (!isEditMode) {
-              return isGunReady && props.gunReadinessEnabled ? `${initiative} (+${isGunReadyInitiative})` : initiative;
+              return props.isGunReady && props.gunReadinessEnabled ? `${props.initiative} (+${isGunReadyInitiative})` : props.initiative;
             } else {
               return (
                 <CustomInput
                   fullWidth
                   type="number"
-                  defaultValue={initiative}
+                  defaultValue={props.initiative}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEditedEntryInitiative(Number(event.target.value))}
                 />
               );
@@ -194,7 +182,7 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
                 <CustomButton
                   icon
                   secondary
-                  clicked={isGunReady}
+                  clicked={props.isGunReady}
                   onClick={onToggleGunReady}
                   title="Gun ready"
                 >
@@ -234,7 +222,7 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
                 return (
                   <CustomMenuItem
                     onClick={onToggleGunReady}
-                    clicked={isGunReady}
+                    clicked={props.isGunReady}
                   >
                     Gun
                   </CustomMenuItem>

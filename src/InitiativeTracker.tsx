@@ -21,7 +21,6 @@ class TrackerEntry {
   hp: string;
   initiative: number;
   isGunReady: boolean;
-  editMode: boolean;
 
   constructor(id: number, name: string, hp: string, initiative: number) {
     this.id = id;
@@ -29,23 +28,30 @@ class TrackerEntry {
     this.hp = hp;
     this.initiative = initiative;
     this.isGunReady = false;
-    this.editMode = false;
   }
 }
 
 const InitiativeTracker: React.FC = () => {
   const isGunReadyInitiative = 50;
 
-  const [gunReadinessEnabled, setGunReadinessEnabled] = useState(false);
+  let initialEntries: TrackerEntry[] = [];
+  let initialIdCounter = 0;
 
-  const [idCounter, setIdCounter] = useState(0);
+  const localStorageEntries = window.localStorage.getItem('trackerEntries');
+  if (localStorageEntries) {
+    initialEntries = JSON.parse(localStorageEntries);
+  }
+  const localStorageIdCounter = window.localStorage.getItem('trackerIdCounter');
+  if (localStorageIdCounter) {
+    initialIdCounter = Number(localStorageIdCounter);
+  }
+
+  const [gunReadinessEnabled, setGunReadinessEnabled] = useState(false);
+  const [idCounter, setIdCounter] = useState(initialIdCounter);
   const [newEntryName, setNewEntryName] = useState('');
   const [newEntryHp, setNewEntryHp] = useState('');
   const [newEntryInitiative, setNewEntryInitiative] = useState(0);
-  const [editedEntryName, setEditedEntryName] = useState('');
-  const [editedEntryHp, setEditedEntryHp] = useState('');
-  const [editedEntryInitiative, setEditedEntryInitiative] = useState(0);
-  const [entries, setEntries] = useState<TrackerEntry[]>([]);
+  const [entries, setEntries] = useState<TrackerEntry[]>(initialEntries);
 
   const handleTurn = () => {
     if (entries.length > 0) {
@@ -53,6 +59,7 @@ const InitiativeTracker: React.FC = () => {
       let entry = tempArray.shift()!;
       tempArray.push(entry);
       setEntries(tempArray);
+      window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray));
     }
   }
 
@@ -72,36 +79,35 @@ const InitiativeTracker: React.FC = () => {
       let tempArray = [...entries, newEntry];
 
       setEntries(tempArray);
+      window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray));
       setNewEntryName('');
       setNewEntryHp('');
       setNewEntryInitiative(0);
       setIdCounter(idCounter + 1);
+      window.localStorage.setItem('trackerIdCounter', String(idCounter + 1));
     }
   }
 
   const removeEntry = (id: number) => {
-    setEntries(entries.filter((entry: TrackerEntry) => {
+    const tempArray = entries.filter((entry: TrackerEntry) => {
       return entry.id !== id;
-    }))
+    });
+    setEntries(tempArray);
+    window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray));
   }
 
-  const toggleEditEntry = (id: number) => {
+  const toggleEditEntry = (id: number, name: string, hp: string, initiative: number) => {
     let tempArray = [...entries];
     let entry = tempArray.find((entry: TrackerEntry) => {
       return entry.id === id;
-    })!;
+    });
 
-    if (entry.editMode) {
-      entry.name = editedEntryName;
-      entry.hp = editedEntryHp;
-      entry.initiative = editedEntryInitiative;
-      entry.editMode = !entry.editMode;
+    if (entry) {
+      entry.name = name;
+      entry.hp = hp;
+      entry.initiative = initiative;
       setEntries(tempArray);
-    } else {
-      entry.editMode = !entry.editMode;
-      setEditedEntryName(entry.name);
-      setEditedEntryHp(entry.hp);
-      setEditedEntryInitiative(entry.initiative);
+      window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray));
     }
   }
 
@@ -112,6 +118,7 @@ const InitiativeTracker: React.FC = () => {
     })!;
     filteredEntry.isGunReady = !filteredEntry.isGunReady;
     setEntries(tempArray);
+    window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray));
   }
 
   const moveEntryUp = (id: number) => {
@@ -131,6 +138,7 @@ const InitiativeTracker: React.FC = () => {
         tempArray.splice(previousEntryIndex, 0, entry[0]);
       }
       setEntries(tempArray);
+      window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray));
     }
   }
 
@@ -152,21 +160,29 @@ const InitiativeTracker: React.FC = () => {
           tempArray.splice(entryIndex, 0, entry[0]);
         }
         setEntries(tempArray);
+        window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray));
       }
     }
+  }
+
+  const clear = () => {
+    setEntries([]);
+    setIdCounter(0);
+    window.localStorage.setItem('trackerEntries', JSON.stringify([]));
+    window.localStorage.setItem('trackerIdCounter', JSON.stringify(0));
   }
 
   const moveEntry = useCallback(
     (dragIndex: number, hoverIndex: number) => {
       const dragEntry = entries[dragIndex];
-      setEntries(
-        update(entries, {
-          $splice: [
-            [dragIndex, 1],
-            [hoverIndex, 0, dragEntry],
-          ],
-        }),
-      )
+      const tempArray = update(entries, {
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, dragEntry],
+        ],
+      });
+      setEntries(tempArray);
+      window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray));
     },
     [entries],
   )
@@ -187,7 +203,7 @@ const InitiativeTracker: React.FC = () => {
           icon
           disabled={entries.length === 0}
           title="Sort"
-          onClick={() => setEntries(sortEntries(entries))}
+          onClick={() => { const tempArray = sortEntries(entries); setEntries(tempArray); window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray)); }}
         >
           <FaSortAmountDown size="1.25em" />
         </CustomButton>
@@ -195,7 +211,7 @@ const InitiativeTracker: React.FC = () => {
           icon
           disabled={entries.length === 0}
           title="Clear"
-          onClick={() => setEntries([])}
+          onClick={clear}
         >
           <FaTimes size="1.25em" />
         </CustomButton>
