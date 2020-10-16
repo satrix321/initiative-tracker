@@ -42,8 +42,8 @@ const Button = styled.button<CustomButtonProps>`
   }
 
   ${props => props.disabled && css`
-    background-color: ${props.theme.colors.greyDark2};
-    cursor: default;
+    background-color: ${props.theme.colors.greyDark2} !important;
+    cursor: default !important;
   `}
 
   ${props => props.icon && css`
@@ -72,6 +72,7 @@ const Button = styled.button<CustomButtonProps>`
     color: ${props.theme.colors.primary};
 
     &:hover {
+      border: 1px solid ${props.theme.colors.primary};
       background-color: ${props.theme.colors.primaryLight3};
     }
 

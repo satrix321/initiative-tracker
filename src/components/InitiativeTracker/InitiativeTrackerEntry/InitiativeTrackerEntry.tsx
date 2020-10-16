@@ -10,6 +10,7 @@ import CustomInput from '../../CustomInput/CustomInput';
 import CustomButton from '../../CustomButton/CustomButton';
 import CustomMenu from '../../CustomMenu/CustomMenu';
 import CustomMenuOption from '../../CustomMenu/CustomMenuOption/CustomMenuOption';
+import CustomMenuItem from '../../CustomMenu/CustomMenuItem/CustomMenuItem';
 
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
@@ -193,6 +194,12 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
     props.onToggleGunReady(props.id);
   }
 
+  const removeEntry = (evt: React.MouseEvent<HTMLElement>) => {
+    if (props.onRemoveEntry) {
+      props.onRemoveEntry(props.id);
+    }
+  }
+
   const opacity = isDragging ? 0.5 : 1;
 
   drag(drop(entryRef));
@@ -294,7 +301,7 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
           <CustomButton
             icon
             secondary
-            onClick={props.onRemoveEntry.bind(undefined, props.id)}
+            onClick={removeEntry}
             title="Remove entry"
           >
             <FaTimes size="1.25em" />
@@ -324,11 +331,11 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
             >
               Edit
             </CustomMenuOption>
-            <CustomMenuOption
-              onClick={props.onRemoveEntry.bind(undefined, props.id)}
+            <CustomMenuItem
+              onClick={removeEntry}
             >
               Delete
-            </CustomMenuOption>
+            </CustomMenuItem>
           </CustomMenu>
         </MobileActionsContainer>
       </ActionsColumn>

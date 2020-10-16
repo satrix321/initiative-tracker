@@ -4,11 +4,12 @@ import styled from 'styled-components';
 const MenuItem = styled.a`
   display: flex;
   align-items: center;
-  justify-content: left;
+  justify-content: space-between;
   height: ${props => props.theme.spacings.p32};
+  width: 100%;
+  box-sizing: border-box;
   padding: 0 ${props => props.theme.spacings.p12};
   min-width: ${props => props.theme.spacings.p64};;
-  width: max-content;
   cursor: pointer;
   transition: background .3s ease-out;
   user-select: none;
@@ -57,6 +58,10 @@ const MenuItemOption = styled.div<MenuItemOptionProps>`
   }
 `;
 
+const Content = styled.span`
+  white-space: nowrap;
+`;
+
 interface CustomMenuOptionProps {
   clicked?: boolean,
   onClick: (event: React.MouseEvent<HTMLElement>) => void,
@@ -68,7 +73,7 @@ const CustomMenuOption: React.FC<CustomMenuOptionProps> = (props) => {
       onClick={props.onClick}
       href="#"
     >
-      {props.children}
+      <Content>{props.children}</Content>
       <MenuItemOption clicked={props.clicked}/>
     </MenuItem>
   );

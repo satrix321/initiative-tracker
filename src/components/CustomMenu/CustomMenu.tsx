@@ -40,6 +40,11 @@ const CustomMenu: React.FC<CustomMenuProps> = (props) => {
 
   const componentRef = useRef<HTMLDivElement>(null);
   const handleWindowClickRef = useRef((event: MouseEvent) => {
+    if (!componentRef.current) {
+      window.removeEventListener('click', handleWindowClickRef.current, false);
+      return;
+    }
+    
     let clickedOutside = !((componentRef.current as HTMLElement === event.target as HTMLElement) || 
       (componentRef.current as HTMLElement).contains(event.target as HTMLElement));
 
@@ -50,7 +55,6 @@ const CustomMenu: React.FC<CustomMenuProps> = (props) => {
   });
 
   const onMenuClick = (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
     if (!active) {
       window.addEventListener('click', handleWindowClickRef.current, false);
     } else {
