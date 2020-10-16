@@ -13,13 +13,13 @@ interface CustomButtonProps {
 
 const Button = styled.button`
   border: none;
-  border-radius: ${props => props.theme.spacings.spacing1};
+  border-radius: ${props => props.theme.spacings.p4};
   color: ${props => props.theme.colors.lightIcon};
   background-color: ${props => props.theme.colors.primary};
   cursor: pointer;
-  height: ${props => props.theme.spacings.spacing6};
-  margin: ${props => props.theme.spacings.spacing1};
-  width: ${props => props.theme.spacings.spacing9};
+  height: ${props => props.theme.spacings.p32};
+  margin: ${props => props.theme.spacings.p4};
+  width: ${props => props.theme.spacings.p96};
   transition: background-color .3s ease-out;
 
   &::-moz-focus-inner {
@@ -48,14 +48,14 @@ const Button = styled.button`
   }
 
   &.icon {
-    width: ${props => props.theme.spacings.spacing6};
+    width: ${props => props.theme.spacings.p32};
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
 
     > svg {
-      width: ${props => props.theme.spacings.spacing6};
+      width: ${props => props.theme.spacings.p32};
     }
   }
 

@@ -5,22 +5,25 @@ import 'styled-components'
 declare module 'styled-components' {
   export interface DefaultTheme {
     spacings: {
-      spacing1: string
-      spacing2: string
-      spacing3: string
-      spacing4: string
-      spacing5: string
-      spacing6: string
-      spacing7: string
-      spacing8: string
-      spacing9: string
-      spacing10: string
-      spacing11: string
-      spacing12: string
-      spacing13: string
-      spacing14: string
-      spacing15: string
-      spacing16: string
+      p2: string
+      p4: string
+      p8: string
+      p12: string
+      p16: string
+      p24: string
+      p32: string
+      p48: string
+      p64: string
+      p96: string
+      p128: string
+      p192: string
+      p256: string
+      p384: string
+      p512: string
+      p640: string
+      p768: string
+      p1024: string
+      p1200: string
     }
 
     fonts: {

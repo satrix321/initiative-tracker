@@ -17,10 +17,10 @@ const Menu = styled.div`
 const MenuContent = styled.div`
   position: absolute;
   z-index: 1;
-  top: calc(${props => props.theme.spacings.spacing6} + ${props => props.theme.spacings.spacing1});
-  right: ${props => props.theme.spacings.spacing1};
+  top: calc(${props => props.theme.spacings.p32} + ${props => props.theme.spacings.p8});
+  right: ${props => props.theme.spacings.p4};
   background: ${props => props.theme.colors.greyLight5};
-  border-radius: ${props => props.theme.spacings.spacing1};
+  border-radius: ${props => props.theme.spacings.p4};
   box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
   opacity: 0;
   visibility: hidden;

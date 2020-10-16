@@ -17,7 +17,7 @@ const Label = styled.label`
   top: 0;
   font-size: ${props => props.theme.fontSizes.regular};
   position: absolute;
-  margin: ${props => props.theme.spacings.spacing2} ${props => props.theme.spacings.spacing1};
+  margin: ${props => props.theme.spacings.p8} ${props => props.theme.spacings.p4};
   padding: 1px;
   color: ${props => props.theme.colors.greyDark3};
   cursor: text;
@@ -26,14 +26,14 @@ const Label = styled.label`
 const Input = styled.input`
   background: transparent;
   font-size: ${props => props.theme.fontSizes.regular};
-  margin: ${props => props.theme.spacings.spacing2} ${props => props.theme.spacings.spacing1};
+  margin: ${props => props.theme.spacings.p8} ${props => props.theme.spacings.p4};
   padding: 1px;
   border: 0;
   border-bottom: 1px solid ${props => props.theme.colors.greyDark2};
   color: ${props => props.theme.colors.greyDark5};
   appearance: textfield;
   transition: border-bottom .3s ease-out;
-  width: calc(100% - ${props => props.theme.spacings.spacing2});
+  width: calc(100% - ${props => props.theme.spacings.p8});
 
   &:focus {
     border-bottom: 1px solid ${props => props.theme.colors.greyDark5};
@@ -58,7 +58,7 @@ const ControlGroup = styled.span`
   &.has-text {
     ${Label} {
       font-size: ${props => props.theme.fontSizes.verySmall};
-      top: -${props => props.theme.spacings.spacing3};
+      top: -${props => props.theme.spacings.p12};
     }
   }
 

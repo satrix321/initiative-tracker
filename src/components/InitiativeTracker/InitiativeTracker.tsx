@@ -10,7 +10,7 @@ import { FaCog } from "react-icons/fa";
 import CustomInput from '../CustomInput/CustomInput';
 import CustomButton from '../CustomButton/CustomButton';
 import CustomMenu from '../CustomMenu/CustomMenu';
-import CustomMenuItem from '../CustomMenu/CustomMenuItem/CustomMenuItem';
+import CustomMenuOption from '../CustomMenu/CustomMenuOption/CustomMenuOption';
 import InitiativeTrackerEntry from './InitiativeTrackerEntry/InitiativeTrackerEntry';
 
 import update from 'immutability-helper';
@@ -34,14 +34,14 @@ class TrackerEntry {
 }
 
 const Container = styled.div`
-  padding: ${props => props.theme.spacings.spacing3};
+  padding: ${props => props.theme.spacings.p12};
 `;
 
 const TrackerBody = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: ${props => props.theme.spacings.spacing3} 0;
+  margin: ${props => props.theme.spacings.p12} 0;
   border-top: 1px solid ${props => props.theme.colors.greyLight2};
   border-bottom: 1px solid ${props => props.theme.colors.greyLight2};
 `;
@@ -55,12 +55,12 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 ${props => props.theme.spacings.spacing1};
+  padding: 0 ${props => props.theme.spacings.p4};
 `;
 
 const Title = styled.span`
   flex-grow: 2;
-  margin: ${props => props.theme.spacings.spacing1};
+  margin: ${props => props.theme.spacings.p4};
   font-size: ${props => props.theme.fontSizes.veryLarge};
   font-weight: ${props => props.theme.fontWeights.bold};
 `;
@@ -69,14 +69,14 @@ const Footer = styled.footer`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 0 ${props => props.theme.spacings.spacing1};
+  padding: 0 ${props => props.theme.spacings.p4};
 `;
 
 const NoDataMessage = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: ${props => props.theme.spacings.spacing7};
+  height: ${props => props.theme.spacings.p48};
 `;
 
 const InitiativeTracker: React.FC = () => {
@@ -272,12 +272,12 @@ const InitiativeTracker: React.FC = () => {
           activatorIcon
           activatorContent={<FaCog size="1.25em" />}
         >
-          <CustomMenuItem
+          <CustomMenuOption
             onClick={() => {setGunReadinessEnabled(!gunReadinessEnabled)}}
             clicked={gunReadinessEnabled}
           >
             Call of Cthulhu
-          </CustomMenuItem>
+          </CustomMenuOption>
         </CustomMenu>
       </Header>
       <TrackerBody>

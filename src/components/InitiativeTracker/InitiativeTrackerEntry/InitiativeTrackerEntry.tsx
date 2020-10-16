@@ -9,7 +9,7 @@ import { FaPen } from "react-icons/fa";
 import CustomInput from '../../CustomInput/CustomInput';
 import CustomButton from '../../CustomButton/CustomButton';
 import CustomMenu from '../../CustomMenu/CustomMenu';
-import CustomMenuItem from '../../CustomMenu/CustomMenuItem/CustomMenuItem';
+import CustomMenuOption from '../../CustomMenu/CustomMenuOption/CustomMenuOption';
 
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
@@ -28,7 +28,7 @@ interface EntryProps {
 const Entry = styled.div<EntryProps>`
   display: flex;
   position: relative;
-  height: ${props => props.theme.spacings.spacing7};
+  height: ${props => props.theme.spacings.p48};
   opacity: ${props => props.opacity};
 
   &:after {
@@ -56,7 +56,7 @@ const NameColumn = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 ${props => props.theme.spacings.spacing1};
+  padding: 0 ${props => props.theme.spacings.p4};
   flex-grow: 1;
 `;
 
@@ -64,25 +64,25 @@ const HpColumn = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 ${props => props.theme.spacings.spacing1};
+  padding: 0 ${props => props.theme.spacings.p4};
   flex-grow: 0;
-  width: ${props => props.theme.spacings.spacing9};
+  width: ${props => props.theme.spacings.p96};
 `;
 
 const InitiativeColumn = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 ${props => props.theme.spacings.spacing1};
+  padding: 0 ${props => props.theme.spacings.p4};
   flex-grow: 0;
-  width: ${props => props.theme.spacings.spacing9};
+  width: ${props => props.theme.spacings.p96};
 `;
 
 const ActionsColumn = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 ${props => props.theme.spacings.spacing1};
+  padding: 0 ${props => props.theme.spacings.p4};
   flex-grow: 0;
 `;
 
@@ -92,7 +92,7 @@ const DesktopActionsContainer = styled.div`
   justify-content: flex-end;
   padding: 0;
 
-  @media screen and (min-width: ${props => props.theme.spacings.spacing15}) {
+  @media screen and (min-width: ${props => props.theme.spacings.p640}) {
     display: flex;
   }
 `;
@@ -103,7 +103,7 @@ const MobileActionsContainer = styled.div`
   justify-content: flex-end;
   padding: 0;
 
-  @media screen and (min-width: ${props => props.theme.spacings.spacing15}) {
+  @media screen and (min-width: ${props => props.theme.spacings.p640}) {
     display: none;
   }
 `;
@@ -309,26 +309,26 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
             {(() => {
               if (props.gunReadinessEnabled) {
                 return (
-                  <CustomMenuItem
+                  <CustomMenuOption
                     onClick={onToggleGunReady}
                     clicked={props.isGunReady}
                   >
                     Gun
-                  </CustomMenuItem>
+                  </CustomMenuOption>
                 );
               }
             })()}
-            <CustomMenuItem
+            <CustomMenuOption
               onClick={onToggleEditEntry}
               clicked={isEditMode}
             >
               Edit
-            </CustomMenuItem>
-            <CustomMenuItem
+            </CustomMenuOption>
+            <CustomMenuOption
               onClick={props.onRemoveEntry.bind(undefined, props.id)}
             >
               Delete
-            </CustomMenuItem>
+            </CustomMenuOption>
           </CustomMenu>
         </MobileActionsContainer>
       </ActionsColumn>
