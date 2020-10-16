@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import './InitiativeTracker.scss';
+import styled from 'styled-components';
 
 import { FaLongArrowAltDown } from "react-icons/fa";
 import { FaSortAmountDown } from "react-icons/fa";
@@ -7,11 +7,11 @@ import { FaTimes } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
 import { FaCog } from "react-icons/fa";
 
-import CustomInput from './CustomInput';
-import CustomButton from './CustomButton';
-import CustomMenu from './CustomMenu';
-import CustomMenuItem from './CustomMenuItem';
-import InitiativeTrackerEntry from './InitiativeTrackerEntry';
+import CustomInput from '../CustomInput/CustomInput';
+import CustomButton from '../CustomButton/CustomButton';
+import CustomMenu from '../CustomMenu/CustomMenu';
+import CustomMenuItem from '../CustomMenu/CustomMenuItem/CustomMenuItem';
+import InitiativeTrackerEntry from './InitiativeTrackerEntry/InitiativeTrackerEntry';
 
 import update from 'immutability-helper';
 
@@ -21,6 +21,7 @@ class TrackerEntry {
   hp: string;
   initiative: number;
   isGunReady: boolean;
+  marked: boolean;
 
   constructor(id: number, name: string, hp: string, initiative: number) {
     this.id = id;
@@ -28,8 +29,55 @@ class TrackerEntry {
     this.hp = hp;
     this.initiative = initiative;
     this.isGunReady = false;
+    this.marked = false;
   }
 }
+
+const Container = styled.div`
+  padding: ${props => props.theme.spacings.spacing3};
+`;
+
+const TrackerBody = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: ${props => props.theme.spacings.spacing3} 0;
+  border-top: 1px solid ${props => props.theme.colors.greyLight2};
+  border-bottom: 1px solid ${props => props.theme.colors.greyLight2};
+`;
+
+const TrackerData = styled.div`
+  width: 100%;
+  border-spacing: 0;
+`;
+
+const Header = styled.header`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 ${props => props.theme.spacings.spacing1};
+`;
+
+const Title = styled.span`
+  flex-grow: 2;
+  margin: ${props => props.theme.spacings.spacing1};
+  font-size: ${props => props.theme.fontSizes.veryLarge};
+  font-weight: ${props => props.theme.fontWeights.bold};
+`;
+
+const Footer = styled.footer`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 ${props => props.theme.spacings.spacing1};
+`;
+
+const NoDataMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: ${props => props.theme.spacings.spacing7};
+`;
 
 const InitiativeTracker: React.FC = () => {
   const isGunReadyInitiative = 50;
@@ -65,9 +113,14 @@ const InitiativeTracker: React.FC = () => {
 
   const sortEntries = (entries: TrackerEntry[]) => {
     if (entries.length > 0) {
-      return [...entries].sort((firstEntry: TrackerEntry, secondEntry: TrackerEntry) => {
+      let sortedEntries = [...entries].sort((firstEntry: TrackerEntry, secondEntry: TrackerEntry) => {
         return (secondEntry.initiative + (secondEntry.isGunReady ? isGunReadyInitiative : 0)) - (firstEntry.initiative + (firstEntry.isGunReady ? isGunReadyInitiative : 0));
       });
+
+      sortedEntries = sortedEntries.map((entry) => { return {...entry, marked: false};});
+      sortedEntries[sortedEntries.length - 1].marked = true;
+
+      return sortedEntries;
     } else {
       return entries;
     }
@@ -188,9 +241,9 @@ const InitiativeTracker: React.FC = () => {
   )
 
   return (
-    <div className="initiative-tracker">
-      <div className="initiative-tracker__header">
-        <span className="initiative-tracker__header-title">Initiative Tracker</span>
+    <Container>
+      <Header>
+        <Title>Initiative Tracker</Title>
         <CustomButton
           icon
           disabled={entries.length < 2}
@@ -226,44 +279,40 @@ const InitiativeTracker: React.FC = () => {
             Call of Cthulhu
           </CustomMenuItem>
         </CustomMenu>
-      </div>
-      <div className="initiative-tracker__body">
-        {(() => {
-          if (entries.length > 0) {
-            return (
-              <div style={{width: '100%'}}>
-                <div className="initiative-tracker__data">
-                  {entries
-                    .map((entry: TrackerEntry, index: number) => {
-                      return (
-                        <InitiativeTrackerEntry
-                          key={entry.id}
-                          id={entry.id}
-                          index={index}
-                          name={entry.name}
-                          hp={entry.hp}
-                          initiative={entry.initiative}
-                          isGunReady={entry.isGunReady}
-                          gunReadinessEnabled={gunReadinessEnabled}
-                          onToggleGunReady={toggleGunReady}
-                          onEditEntry={toggleEditEntry}
-                          onRemoveEntry={removeEntry}
-                          onMoveEntryUp={moveEntryUp}
-                          onMoveEntryDown={moveEntryDown}
-                          onMove={moveEntry}
-                        />
-                      )
-                    })
-                  }
-                </div>
-              </div>
-            );
-          } else {
-            return <div className="initiative-tracker__no-data">No Data</div>
-          }
-        })()}
-      </div>
-      <div className="initiative-tracker__footer">
+      </Header>
+      <TrackerBody>
+        {entries.length > 0
+          ? <div style={{width: '100%'}}>
+              <TrackerData>
+                {entries
+                  .map((entry: TrackerEntry, index: number) => {
+                    return (
+                      <InitiativeTrackerEntry
+                        key={entry.id}
+                        id={entry.id}
+                        index={index}
+                        name={entry.name}
+                        hp={entry.hp}
+                        initiative={entry.initiative}
+                        isGunReady={entry.isGunReady}
+                        marked={entry.marked}
+                        gunReadinessEnabled={gunReadinessEnabled}
+                        onToggleGunReady={toggleGunReady}
+                        onEditEntry={toggleEditEntry}
+                        onRemoveEntry={removeEntry}
+                        onMoveEntryUp={moveEntryUp}
+                        onMoveEntryDown={moveEntryDown}
+                        onMove={moveEntry}
+                      />
+                    )
+                  })
+                }
+              </TrackerData>
+            </div>
+          : <NoDataMessage>No Data</NoDataMessage>  
+        }
+      </TrackerBody>
+      <Footer>
         <CustomInput
           label="Name"
           type="text"
@@ -290,8 +339,8 @@ const InitiativeTracker: React.FC = () => {
         >
           <FaPlus size="1.25em"/>
         </CustomButton>
-      </div>
-    </div>
+      </Footer>
+    </Container>
   );
 }
 

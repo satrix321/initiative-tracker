@@ -1,12 +1,36 @@
 import React, { useRef, useState } from 'react';
-import './CustomMenu.scss';
-import './CustomButton.scss';
+import styled from 'styled-components';
+import CustomButton from '../CustomButton/CustomButton';
+import classNames from 'classnames';
 
 interface CustomMenuProps {
   activatorIcon?: boolean,
   activatorSecondary?: boolean,
   activatorContent?: any,
 }
+
+const Menu = styled.div`
+  position: relative;
+  margin: 0;
+`;
+
+const MenuContent = styled.div`
+  position: absolute;
+  z-index: 1;
+  top: calc(${props => props.theme.spacings.spacing6} + ${props => props.theme.spacings.spacing1});
+  right: ${props => props.theme.spacings.spacing1};
+  background: ${props => props.theme.colors.greyLight5};
+  border-radius: ${props => props.theme.spacings.spacing1};
+  box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .3s ease-out, visibility .3s ease-out;
+
+  &.active {
+    visibility: initial;
+    opacity: 1;
+  }
+`;
 
 const CustomMenu: React.FC<CustomMenuProps> = (props) => {
   const [active, setActive] = useState(false);
@@ -33,22 +57,18 @@ const CustomMenu: React.FC<CustomMenuProps> = (props) => {
   };
 
   return (
-    <div ref={componentRef} className="menu">
-      <div className="menu__activator">
-        <button
-          className={`button ${props.activatorIcon ? 'button--icon' : ''}
-            ${active ? 'button--is-clicked' : ''}
-            ${props.activatorSecondary ? 'button--is-secondary' : ''}`
-          }
+    <Menu ref={componentRef}>
+      <div>
+        <CustomButton
+          icon={props.activatorIcon}
+          clicked={active}
           onClick={onMenuClick}
-        >
-          {props.activatorContent}
-        </button>
+        >{props.activatorContent}</CustomButton>
       </div>
-      <div className={`menu__content ${active ? 'menu__content--active' : ''}`}>
+      <MenuContent className={classNames({'active': active})}>
         {props.children}
-      </div>
-    </div>
+      </MenuContent>
+    </Menu>
   );
 }
 

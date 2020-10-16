@@ -1,15 +1,15 @@
 import React, { useRef, useState } from 'react';
-import './InitiativeTrackerEntry.scss';
+import styled from 'styled-components';
 
 import { GiPistolGun } from "react-icons/gi";
 import { FaChevronDown } from "react-icons/fa";
 import { FaTimes } from "react-icons/fa";
 import { FaPen } from "react-icons/fa";
 
-import CustomInput from './CustomInput';
-import CustomButton from './CustomButton';
-import CustomMenu from './CustomMenu';
-import CustomMenuItem from './CustomMenuItem';
+import CustomInput from '../../CustomInput/CustomInput';
+import CustomButton from '../../CustomButton/CustomButton';
+import CustomMenu from '../../CustomMenu/CustomMenu';
+import CustomMenuItem from '../../CustomMenu/CustomMenuItem/CustomMenuItem';
 
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
@@ -20,6 +20,94 @@ interface DragItem {
   type: string;
 }
 
+interface EntryProps {
+  opacity: number;
+  marked: boolean;
+}
+
+const Entry = styled.div<EntryProps>`
+  display: flex;
+  position: relative;
+  height: ${props => props.theme.spacings.spacing7};
+  opacity: ${props => props.opacity};
+
+  &:after {
+    display: ${props => props.marked ? 'block' : 'none'};
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: ${props => props.theme.colors.primary};
+  }
+
+  &:nth-child(odd) {
+    background-color: ${props => props.theme.colors.greyLight3};
+  }
+`;
+
+const ColumnLabel = styled.div`
+  font-size: ${props => props.theme.fontSizes.verySmall};
+  color: ${props => props.theme.colors.greyDark3};
+`;
+
+const NameColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 ${props => props.theme.spacings.spacing1};
+  flex-grow: 1;
+`;
+
+const HpColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 ${props => props.theme.spacings.spacing1};
+  flex-grow: 0;
+  width: ${props => props.theme.spacings.spacing9};
+`;
+
+const InitiativeColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 ${props => props.theme.spacings.spacing1};
+  flex-grow: 0;
+  width: ${props => props.theme.spacings.spacing9};
+`;
+
+const ActionsColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 ${props => props.theme.spacings.spacing1};
+  flex-grow: 0;
+`;
+
+const DesktopActionsContainer = styled.div`
+  display: none;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0;
+
+  @media screen and (min-width: ${props => props.theme.spacings.spacing15}) {
+    display: flex;
+  }
+`;
+
+const MobileActionsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0;
+
+  @media screen and (min-width: ${props => props.theme.spacings.spacing15}) {
+    display: none;
+  }
+`;
+
 interface InitiativeTrackerEntryProps {
   id: number;
   index: number;
@@ -28,6 +116,7 @@ interface InitiativeTrackerEntryProps {
   initiative: number;
   isGunReady: boolean;
   gunReadinessEnabled: boolean;
+  marked: boolean;
 
   onToggleGunReady: (id: number) => void;
   onEditEntry: (id: number, name: string, hp: string, initiative: number) => void;
@@ -109,16 +198,16 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
   drag(drop(entryRef));
 
   return (
-    <div
+    <Entry
       ref={entryRef}
-      className="initiative-tracker__entry"
       key={props.id}
       data-id={props.id}
       id={`entry_${props.id}`}
-      style={{opacity}}
+      opacity={opacity}
+      marked={props.marked}
     >
-      <div className="initiative-tracker__name-column">
-        <div className="initiative-tracker__column-label">Name</div>
+      <NameColumn>
+        <ColumnLabel>Name</ColumnLabel>
         <div>
           {(() => {
             if (!isEditMode) {
@@ -135,9 +224,9 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
             }
           })()}
         </div>
-      </div>
-      <div className="initiative-tracker__hp-column">
-        <div className="initiative-tracker__column-label">HP</div>
+      </NameColumn>
+      <HpColumn>
+        <ColumnLabel>HP</ColumnLabel>
         <div>
           {(() => {
             if (!isEditMode) {
@@ -154,9 +243,9 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
             }
           })()}
         </div>
-      </div>
-      <div className="initiative-tracker__initiative-column">
-        <div className="initiative-tracker__column-label">Initiative</div>
+      </HpColumn>
+      <InitiativeColumn>
+        <ColumnLabel>Initiative</ColumnLabel>
         <div>
           {(() => {
             if (!isEditMode) {
@@ -173,9 +262,9 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
             }
           })()}
         </div>
-      </div>
-      <div className="initiative-tracker__actions-column">
-        <div className="initiative-tracker__actions-container initiative-tracker__actions-container--desktop-only">
+      </InitiativeColumn>
+      <ActionsColumn>
+        <DesktopActionsContainer>
           {(() => {
             if (props.gunReadinessEnabled) {
               return (
@@ -210,8 +299,8 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
           >
             <FaTimes size="1.25em" />
           </CustomButton>
-        </div>
-        <div className="initiative-tracker__actions-container initiative-tracker__actions-container--mobile-only">
+        </DesktopActionsContainer>
+        <MobileActionsContainer>
           <CustomMenu
             activatorIcon
             activatorSecondary
@@ -241,9 +330,9 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
               Delete
             </CustomMenuItem>
           </CustomMenu>
-        </div>
-      </div>
-    </div>
+        </MobileActionsContainer>
+      </ActionsColumn>
+    </Entry>
   );
 }
 
