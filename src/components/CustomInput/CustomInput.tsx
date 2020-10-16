@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import styled from 'styled-components';
-import classNames from 'classnames';
+import styled, { css } from 'styled-components';
 import uniqueId from 'lodash/uniqueId';
 
 interface CustomInputProps {
@@ -23,7 +22,11 @@ const Label = styled.label`
   cursor: text;
 `;
 
-const Input = styled.input`
+interface InputProps {
+  fullWidth?: boolean;
+};
+
+const Input = styled.input<InputProps>`
   background: transparent;
   font-size: ${props => props.theme.fontSizes.regular};
   margin: ${props => props.theme.spacings.p8} ${props => props.theme.spacings.p4};
@@ -45,10 +48,10 @@ const Input = styled.input`
     box-shadow: none;
   }
 
-  &.full-width {
+  ${props => props.fullWidth && css`
     width: 100%;
     margin: 0;
-  }
+  `}
 `;
 
 const ControlGroup = styled.span`
@@ -122,7 +125,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
       <Input
         ref={input}
         id={id}
-        className={classNames({'full-width': props.fullWidth})}
+        fullWidth={props.fullWidth}
         type={props.type || 'text'}
         defaultValue={props.defaultValue}
         value={props.value || (props.type === 'number' && !props.defaultValue ? '' : props.value)}

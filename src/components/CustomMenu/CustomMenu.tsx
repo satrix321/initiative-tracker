@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import CustomButton from '../CustomButton/CustomButton';
-import classNames from 'classnames';
 
 interface CustomMenuProps {
   activatorIcon?: boolean,
@@ -14,7 +13,11 @@ const Menu = styled.div`
   margin: 0;
 `;
 
-const MenuContent = styled.div`
+interface MenuContentProps {
+  active?: boolean;
+};
+
+const MenuContent = styled.div<MenuContentProps>`
   position: absolute;
   z-index: 1;
   top: calc(${props => props.theme.spacings.p32} + ${props => props.theme.spacings.p8});
@@ -26,10 +29,10 @@ const MenuContent = styled.div`
   visibility: hidden;
   transition: opacity .3s ease-out, visibility .3s ease-out;
 
-  &.active {
+  ${props => props.active && css`
     visibility: initial;
     opacity: 1;
-  }
+  `}
 `;
 
 const CustomMenu: React.FC<CustomMenuProps> = (props) => {
@@ -65,7 +68,7 @@ const CustomMenu: React.FC<CustomMenuProps> = (props) => {
           onClick={onMenuClick}
         >{props.activatorContent}</CustomButton>
       </div>
-      <MenuContent className={classNames({'active': active})}>
+      <MenuContent active={active}>
         {props.children}
       </MenuContent>
     </Menu>
