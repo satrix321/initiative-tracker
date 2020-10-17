@@ -2,12 +2,12 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 
 interface CustomButtonProps {
-  icon?: boolean,
-  secondary?: boolean,
-  clicked?: boolean,
-  disabled?: boolean,
-  title?: string,
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void,
+  icon?: boolean;
+  secondary?: boolean;
+  clicked?: boolean;
+  disabled?: boolean;
+  title?: string;
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const Button = styled.button<CustomButtonProps>`
@@ -122,6 +122,6 @@ const CustomButton: React.FC<CustomButtonProps> = (props) => {
       {props.children}
     </Button>
   );
-}
+};
 
 export default CustomButton;

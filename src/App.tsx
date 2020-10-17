@@ -53,6 +53,6 @@ const App: React.FC = () => {
       </DndProvider>
     </div>
   );
-}
+};
 
 export default App;

@@ -3,12 +3,16 @@ import styled, { css } from 'styled-components';
 import uniqueId from 'lodash/uniqueId';
 
 interface CustomInputProps {
-  label?: string,
-  defaultValue?: any,
-  value?: any,
-  type?: string,
-  fullWidth?: boolean,
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
+  label?: string;
+  defaultValue?: any;
+  value?: any;
+  type?: string;
+  fullWidth?: boolean;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+interface InputProps {
+  fullWidth?: boolean;
 }
 
 const Label = styled.label`
@@ -21,10 +25,6 @@ const Label = styled.label`
   color: ${props => props.theme.colors.greyDark3};
   cursor: text;
 `;
-
-interface InputProps {
-  fullWidth?: boolean;
-};
 
 const Input = styled.input<InputProps>`
   background: transparent;
@@ -102,7 +102,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
 
   const focusInput = (event: React.FocusEvent<HTMLInputElement>) => {
     event.target.parentElement!.classList.add('active');
-  }
+  };
 
   const blurInput = (event: React.FocusEvent<HTMLInputElement>) => {
     if ((event.target.value !== null && event.target.value !== undefined && event.target.value !== '') || !event.target.validity.valid) {
@@ -117,7 +117,7 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
     } else {
       event.target.parentElement!.classList.remove('invalid');
     }
-  }
+  };
 
   return (
     <ControlGroup ref={controlGroup}>
@@ -135,6 +135,6 @@ const CustomInput: React.FC<CustomInputProps> = (props) => {
       ></Input>
     </ControlGroup>
   );
-}
+};
 
 export default CustomInput;

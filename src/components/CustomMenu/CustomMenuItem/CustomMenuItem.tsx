@@ -1,6 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
+interface CustomMenuOptionProps {
+  clicked?: boolean;
+  onClick: (event: React.MouseEvent<HTMLElement>) => void;
+}
+
 const MenuItem = styled.a`
   display: flex;
   align-items: center;
@@ -30,11 +35,6 @@ const Content = styled.span`
   white-space: nowrap;
 `;
 
-interface CustomMenuOptionProps {
-  clicked?: boolean,
-  onClick: (event: React.MouseEvent<HTMLElement>) => void,
-}
-
 const CustomMenuItem: React.FC<CustomMenuOptionProps> = (props) => {
   return (
     <MenuItem
@@ -44,6 +44,6 @@ const CustomMenuItem: React.FC<CustomMenuOptionProps> = (props) => {
       <Content>{props.children}</Content>
     </MenuItem>
   );
-}
+};
 
 export default CustomMenuItem;

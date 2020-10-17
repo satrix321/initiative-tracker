@@ -1,17 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 
-interface CustomButtonGroupProps {
-  
-}
-
 const ButtonGroup = styled.span`
   display: flex;
   flex-direction: column;
-  margin: $spacing-1;
+  margin: ${props => props.theme.spacings.p2};
 
   > * {
-    height: $spacing-4;
+    height: ${props => props.theme.spacings.p12};
     margin: 0;
 
     &:first-child {
@@ -26,12 +22,12 @@ const ButtonGroup = styled.span`
   }
 `;
 
-const CustomButtonGroup: React.FC<CustomButtonGroupProps> = (props) => {
+const CustomButtonGroup: React.FC = (props) => {
   return (
     <ButtonGroup>
       {props.children}
     </ButtonGroup>
   );
-}
+};
 
 export default CustomButtonGroup;

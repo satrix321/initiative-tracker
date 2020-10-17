@@ -22,13 +22,11 @@ export const Theme: DefaultTheme = {
     p1024: '64rem',
     p1200: '75rem',
   },
-  
   fonts: {
     text: '"Helvetica"',
     input: 'Tahoma',
     mono: 'source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace',
   },
-  
   fontSizes: {
     verySmall: '0.625rem',
     small: '0.75rem',
@@ -36,16 +34,13 @@ export const Theme: DefaultTheme = {
     large: '1rem',
     veryLarge: '1.125rem',
   },
-  
   fontWeights: {
     normal: '400',
     bold: '600',
   },
-  
   colors: {
     lightIcon: 'hsl(0, 0%, 100%)',
     darkIcon: 'hsl(0, 0%, 0%)',
-  
     primaryDark3: 'hsl(270, 62%, 10%)',
     primaryDark2: 'hsl(270, 63%, 25%)',
     primaryDark1: 'hsl(270, 63%, 32%)',
@@ -53,7 +48,6 @@ export const Theme: DefaultTheme = {
     primaryLight1: 'hsl(270, 63%, 55%)',
     primaryLight2: 'hsl(270, 63%, 75%)',
     primaryLight3: 'hsl(270, 62%, 90%)',
-  
     secondaryDark3: 'hsl(311, 71%, 10%)',
     secondaryDark2: 'hsl(311, 71%, 25%)',
     secondaryDark1: 'hsl(311, 71%, 32%)',
@@ -61,7 +55,6 @@ export const Theme: DefaultTheme = {
     secondaryLight1: 'hsl(311, 71%, 55%)',
     secondaryLight2: 'hsl(311, 71%, 75%)',
     secondaryLight3: 'hsl(311, 71%, 90%)',
-  
     errorDark3: 'hsl(0, 70%, 25%)',
     errorDark2: 'hsl(0, 67%, 33%)',
     errorDark1: 'hsl(0, 70%, 42%)',
@@ -69,7 +62,6 @@ export const Theme: DefaultTheme = {
     errorLight1: 'hsl(0, 70%, 65%)',
     errorLight2: 'hsl(0, 79%, 80%)',
     errorLight3: 'hsl(0, 77%, 95%)',
-  
     greyDark5: 'hsl(213, 12%, 15%)',
     greyDark4: 'hsl(210, 10%, 23%)',
     greyDark3: 'hsl(210, 9%, 31%)',

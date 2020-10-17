@@ -3,19 +3,19 @@ import styled, { css } from 'styled-components';
 import CustomButton from '../CustomButton/CustomButton';
 
 interface CustomMenuProps {
-  activatorIcon?: boolean,
-  activatorSecondary?: boolean,
-  activatorContent?: any,
+  activatorIcon?: boolean;
+  activatorSecondary?: boolean;
+  activatorContent?: any;
+}
+
+interface MenuContentProps {
+  active?: boolean;
 }
 
 const Menu = styled.div`
   position: relative;
   margin: 0;
 `;
-
-interface MenuContentProps {
-  active?: boolean;
-};
 
 const MenuContent = styled.div<MenuContentProps>`
   position: absolute;
@@ -44,8 +44,8 @@ const CustomMenu: React.FC<CustomMenuProps> = (props) => {
       window.removeEventListener('click', handleWindowClickRef.current, false);
       return;
     }
-    
-    let clickedOutside = !((componentRef.current as HTMLElement === event.target as HTMLElement) || 
+
+    const clickedOutside = !((componentRef.current as HTMLElement === event.target as HTMLElement) ||
       (componentRef.current as HTMLElement).contains(event.target as HTMLElement));
 
     if (clickedOutside) {
@@ -77,6 +77,6 @@ const CustomMenu: React.FC<CustomMenuProps> = (props) => {
       </MenuContent>
     </Menu>
   );
-}
+};
 
 export default CustomMenu;

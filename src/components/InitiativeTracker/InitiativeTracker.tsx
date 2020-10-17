@@ -84,6 +84,7 @@ const InitiativeTracker: React.FC = () => {
 
   let initialEntries: TrackerEntry[] = [];
   let initialIdCounter = 0;
+  let initialGunReadinessEnabled = false;
 
   const localStorageEntries = window.localStorage.getItem('trackerEntries');
   if (localStorageEntries) {
@@ -93,8 +94,12 @@ const InitiativeTracker: React.FC = () => {
   if (localStorageIdCounter) {
     initialIdCounter = Number(localStorageIdCounter);
   }
+  const localStorageGunReadinessEnabled = window.localStorage.getItem('trackerGunReadinessEnabled');
+  if (localStorageGunReadinessEnabled) {
+    initialGunReadinessEnabled = localStorageGunReadinessEnabled === 'true';
+  }
 
-  const [gunReadinessEnabled, setGunReadinessEnabled] = useState(false);
+  const [gunReadinessEnabled, setGunReadinessEnabled] = useState(initialGunReadinessEnabled);
   const [idCounter, setIdCounter] = useState(initialIdCounter);
   const [newEntryName, setNewEntryName] = useState('');
   const [newEntryHp, setNewEntryHp] = useState('');
@@ -103,17 +108,17 @@ const InitiativeTracker: React.FC = () => {
 
   const handleTurn = () => {
     if (entries.length > 0) {
-      let tempArray = [...entries];
-      let entry = tempArray.shift()!;
+      const tempArray = [...entries];
+      const entry = tempArray.shift()!;
       tempArray.push(entry);
       setEntries(tempArray);
       window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray));
     }
-  }
+  };
 
-  const sortEntries = (entries: TrackerEntry[]) => {
-    if (entries.length > 0) {
-      let sortedEntries = [...entries].sort((firstEntry: TrackerEntry, secondEntry: TrackerEntry) => {
+  const sortEntries = (trackerEntries: TrackerEntry[]) => {
+    if (trackerEntries.length > 0) {
+      let sortedEntries = [...trackerEntries].sort((firstEntry: TrackerEntry, secondEntry: TrackerEntry) => {
         return (secondEntry.initiative + (secondEntry.isGunReady ? isGunReadyInitiative : 0)) - (firstEntry.initiative + (firstEntry.isGunReady ? isGunReadyInitiative : 0));
       });
 
@@ -122,14 +127,14 @@ const InitiativeTracker: React.FC = () => {
 
       return sortedEntries;
     } else {
-      return entries;
+      return trackerEntries;
     }
-  }
+  };
 
   const addEntry = () => {
     if (newEntryName && newEntryInitiative) {
-      let newEntry = new TrackerEntry(idCounter, newEntryName, newEntryHp, newEntryInitiative);
-      let tempArray = [...entries, newEntry];
+      const newEntry = new TrackerEntry(idCounter, newEntryName, newEntryHp, newEntryInitiative);
+      const tempArray = [...entries, newEntry];
 
       setEntries(tempArray);
       window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray));
@@ -139,7 +144,7 @@ const InitiativeTracker: React.FC = () => {
       setIdCounter(idCounter + 1);
       window.localStorage.setItem('trackerIdCounter', String(idCounter + 1));
     }
-  }
+  };
 
   const removeEntry = (id: number) => {
     const tempArray = entries.filter((entry: TrackerEntry) => {
@@ -147,12 +152,12 @@ const InitiativeTracker: React.FC = () => {
     });
     setEntries(tempArray);
     window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray));
-  }
+  };
 
   const toggleEditEntry = (id: number, name: string, hp: string, initiative: number) => {
-    let tempArray = [...entries];
-    let entry = tempArray.find((entry: TrackerEntry) => {
-      return entry.id === id;
+    const tempArray = [...entries];
+    const entry = tempArray.find((trackerEntry) => {
+      return trackerEntry.id === id;
     });
 
     if (entry) {
@@ -162,68 +167,69 @@ const InitiativeTracker: React.FC = () => {
       setEntries(tempArray);
       window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray));
     }
-  }
+  };
 
   const toggleGunReady = (id: number) => {
-    let tempArray = [...entries];
-    let filteredEntry = tempArray.find((entry: TrackerEntry) => {
+    const tempArray = [...entries];
+    const filteredEntry = tempArray.find((entry: TrackerEntry) => {
       return entry.id === id;
     })!;
     filteredEntry.isGunReady = !filteredEntry.isGunReady;
     setEntries(tempArray);
     window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray));
-  }
+  };
 
   const moveEntryUp = (id: number) => {
     if (entries.length >= 2) {
-      let tempArray: TrackerEntry[] = [...entries];
-      let entryIndex: number = entries.findIndex((entry: TrackerEntry) => {
+      const tempArray: TrackerEntry[] = [...entries];
+      const entryIndex: number = entries.findIndex((entry: TrackerEntry) => {
         return entry.id === id;
       });
       if (entryIndex === -1) {
         return;
       } else if (entryIndex === 0) {
-        let entry = tempArray.shift()!;
+        const entry = tempArray.shift()!;
         tempArray.push(entry);
       } else {
-        let previousEntryIndex: number = entryIndex - 1;
-        let entry = tempArray.splice(entryIndex, 1);
+        const previousEntryIndex: number = entryIndex - 1;
+        const entry = tempArray.splice(entryIndex, 1);
         tempArray.splice(previousEntryIndex, 0, entry[0]);
       }
       setEntries(tempArray);
       window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray));
     }
-  }
+  };
 
   const moveEntryDown = (id: number) => {
     if (entries.length >= 2) {
       if (entries.length >= 2) {
-        let tempArray: TrackerEntry[] = [...entries];
-        let entryIndex: number = entries.findIndex((entry: TrackerEntry) => {
+        const tempArray: TrackerEntry[] = [...entries];
+        const entryIndex: number = entries.findIndex((entry: TrackerEntry) => {
           return entry.id === id;
         });
         if (entryIndex === -1) {
           return;
         } else if (entryIndex === entries.length - 1) {
-          let entry = tempArray.pop()!;
+          const entry = tempArray.pop()!;
           tempArray.unshift(entry);
         } else {
-          let nextEntryIndex: number = entryIndex + 1;
-          let entry = tempArray.splice(nextEntryIndex, 1);
+          const nextEntryIndex: number = entryIndex + 1;
+          const entry = tempArray.splice(nextEntryIndex, 1);
           tempArray.splice(entryIndex, 0, entry[0]);
         }
         setEntries(tempArray);
         window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray));
       }
     }
-  }
+  };
 
   const clear = () => {
     setEntries([]);
     setIdCounter(0);
     window.localStorage.setItem('trackerEntries', JSON.stringify([]));
     window.localStorage.setItem('trackerIdCounter', JSON.stringify(0));
-  }
+    window.localStorage.setItem('trackerGunReadinessEnabled', String(gunReadinessEnabled));
+  };
 
   const moveEntry = useCallback(
     (dragIndex: number, hoverIndex: number) => {
@@ -238,7 +244,18 @@ const InitiativeTracker: React.FC = () => {
       window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray));
     },
     [entries],
-  )
+  );
+
+  const onSortClick = () => {
+    const tempArray = sortEntries(entries);
+    setEntries(tempArray);
+    window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray));
+  };
+
+  const onGunReadinessChangeClick = () => {
+    setGunReadinessEnabled(!gunReadinessEnabled);
+    window.localStorage.setItem('trackerGunReadinessEnabled', String(!gunReadinessEnabled));
+  };
 
   return (
     <Container>
@@ -256,7 +273,7 @@ const InitiativeTracker: React.FC = () => {
           icon
           disabled={entries.length === 0}
           title="Sort"
-          onClick={() => { const tempArray = sortEntries(entries); setEntries(tempArray); window.localStorage.setItem('trackerEntries', JSON.stringify(tempArray)); }}
+          onClick={onSortClick}
         >
           <FaSortAmountDown size="1.25em" />
         </CustomButton>
@@ -273,7 +290,7 @@ const InitiativeTracker: React.FC = () => {
           activatorContent={<FaCog size="1.25em" />}
         >
           <CustomMenuOption
-            onClick={() => {setGunReadinessEnabled(!gunReadinessEnabled)}}
+            onClick={onGunReadinessChangeClick}
             clicked={gunReadinessEnabled}
           >
             Call of Cthulhu
@@ -285,31 +302,29 @@ const InitiativeTracker: React.FC = () => {
           ? <div style={{width: '100%'}}>
               <TrackerData>
                 {entries
-                  .map((entry: TrackerEntry, index: number) => {
-                    return (
-                      <InitiativeTrackerEntry
-                        key={entry.id}
-                        id={entry.id}
-                        index={index}
-                        name={entry.name}
-                        hp={entry.hp}
-                        initiative={entry.initiative}
-                        isGunReady={entry.isGunReady}
-                        marked={entry.marked}
-                        gunReadinessEnabled={gunReadinessEnabled}
-                        onToggleGunReady={toggleGunReady}
-                        onEditEntry={toggleEditEntry}
-                        onRemoveEntry={removeEntry}
-                        onMoveEntryUp={moveEntryUp}
-                        onMoveEntryDown={moveEntryDown}
-                        onMove={moveEntry}
-                      />
-                    )
-                  })
+                  .map((entry: TrackerEntry, index: number) =>
+                    <InitiativeTrackerEntry
+                      key={entry.id}
+                      id={entry.id}
+                      index={index}
+                      name={entry.name}
+                      hp={entry.hp}
+                      initiative={entry.initiative}
+                      isGunReady={entry.isGunReady}
+                      marked={entry.marked}
+                      gunReadinessEnabled={gunReadinessEnabled}
+                      onToggleGunReady={toggleGunReady}
+                      onEditEntry={toggleEditEntry}
+                      onRemoveEntry={removeEntry}
+                      onMoveEntryUp={moveEntryUp}
+                      onMoveEntryDown={moveEntryDown}
+                      onMove={moveEntry}
+                    />
+                  )
                 }
               </TrackerData>
             </div>
-          : <NoDataMessage>No Data</NoDataMessage>  
+          : <NoDataMessage>No Data</NoDataMessage>
         }
       </TrackerBody>
       <Footer>
@@ -342,6 +357,6 @@ const InitiativeTracker: React.FC = () => {
       </Footer>
     </Container>
   );
-}
+};
 
 export default InitiativeTracker;

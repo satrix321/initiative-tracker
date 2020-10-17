@@ -26,6 +26,24 @@ interface EntryProps {
   marked: boolean;
 }
 
+interface InitiativeTrackerEntryProps {
+  id: number;
+  index: number;
+  name: string;
+  hp: string;
+  initiative: number;
+  isGunReady: boolean;
+  gunReadinessEnabled: boolean;
+  marked: boolean;
+
+  onToggleGunReady: (id: number) => void;
+  onEditEntry: (id: number, name: string, hp: string, initiative: number) => void;
+  onRemoveEntry: (id: number) => void;
+  onMoveEntryUp: (id: number) => void;
+  onMoveEntryDown: (id: number) => void;
+  onMove: (dragIndex: number, hoverIndex: number) => void;
+}
+
 const Entry = styled.div<EntryProps>`
   display: flex;
   position: relative;
@@ -109,24 +127,6 @@ const MobileActionsContainer = styled.div`
   }
 `;
 
-interface InitiativeTrackerEntryProps {
-  id: number;
-  index: number;
-  name: string;
-  hp: string;
-  initiative: number;
-  isGunReady: boolean;
-  gunReadinessEnabled: boolean;
-  marked: boolean;
-
-  onToggleGunReady: (id: number) => void;
-  onEditEntry: (id: number, name: string, hp: string, initiative: number) => void;
-  onRemoveEntry: (id: number) => void;
-  onMoveEntryUp: (id: number) => void;
-  onMoveEntryDown: (id: number) => void;
-  onMove: (dragIndex: number, hoverIndex: number) => void;
-}
-
 const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) => {
   const isGunReadyInitiative = 50;
 
@@ -172,14 +172,14 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
       props.onMove(dragIndex, hoverIndex);
       item.index = hoverIndex;
     },
-  })
+  });
 
   const [{ isDragging }, drag] = useDrag({
     item: { type: 'InitiativeTrackerEntry', index: props.index, id: props.id },
     collect: (monitor: any) => ({
       isDragging: monitor.isDragging(),
     }),
-  })
+  });
 
   const onToggleEditEntry = () => {
     if (isEditMode) {
@@ -188,17 +188,17 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
     } else {
       setIsEditMode(!isEditMode);
     }
-  }
+  };
 
   const onToggleGunReady = () => {
     props.onToggleGunReady(props.id);
-  }
+  };
 
   const removeEntry = (evt: React.MouseEvent<HTMLElement>) => {
     if (props.onRemoveEntry) {
       props.onRemoveEntry(props.id);
     }
-  }
+  };
 
   const opacity = isDragging ? 0.5 : 1;
 
@@ -216,79 +216,59 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
       <NameColumn>
         <ColumnLabel>Name</ColumnLabel>
         <div>
-          {(() => {
-            if (!isEditMode) {
-              return props.name;
-            } else {
-              return (
-                <CustomInput
-                  fullWidth
-                  type="text"
-                  defaultValue={props.name}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEditedEntryName(event.target.value)}
-                />
-              );
-            }
-          })()}
+          {!isEditMode
+            ? props.name
+            : <CustomInput
+                fullWidth
+                type="text"
+                defaultValue={props.name}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEditedEntryName(event.target.value)}
+              />
+          }
         </div>
       </NameColumn>
       <HpColumn>
         <ColumnLabel>HP</ColumnLabel>
         <div>
-          {(() => {
-            if (!isEditMode) {
-              return props.hp;
-            } else {
-              return (
-                <CustomInput
-                  fullWidth
-                  type="text"
-                  defaultValue={props.hp}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEditedEntryHp(event.target.value)}
-                />
-              );
-            }
-          })()}
+          {!isEditMode
+            ? props.hp
+            : <CustomInput
+                fullWidth
+                type="text"
+                defaultValue={props.hp}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEditedEntryHp(event.target.value)}
+              />
+          }
         </div>
       </HpColumn>
       <InitiativeColumn>
         <ColumnLabel>Initiative</ColumnLabel>
         <div>
-          {(() => {
-            if (!isEditMode) {
-              return props.isGunReady && props.gunReadinessEnabled ? `${props.initiative} (+${isGunReadyInitiative})` : props.initiative;
-            } else {
-              return (
-                <CustomInput
-                  fullWidth
-                  type="number"
-                  defaultValue={props.initiative}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEditedEntryInitiative(Number(event.target.value))}
-                />
-              );
-            }
-          })()}
+          {!isEditMode
+            ? (props.isGunReady && props.gunReadinessEnabled ? `${props.initiative} (+${isGunReadyInitiative})` : props.initiative)
+            : <CustomInput
+                fullWidth
+                type="number"
+                defaultValue={props.initiative}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEditedEntryInitiative(Number(event.target.value))}
+              />
+          }
         </div>
       </InitiativeColumn>
       <ActionsColumn>
         <DesktopActionsContainer>
-          {(() => {
-            if (props.gunReadinessEnabled) {
-              return (
-                <CustomButton
-                  icon
-                  secondary
-                  clicked={props.isGunReady}
-                  onClick={onToggleGunReady}
-                  title="Gun ready"
-                >
-                  <GiPistolGun size="1.75em" />
-                </CustomButton>
-              );
-            } else {
-              return <></>
-            }
-          })()}
+          {props.gunReadinessEnabled
+            ? <CustomButton
+                icon
+                secondary
+                clicked={props.isGunReady}
+                onClick={onToggleGunReady}
+                title="Gun ready"
+              >
+                <GiPistolGun size="1.75em" />
+              </CustomButton>
+            : <></>
+          }
           <CustomButton
             icon
             secondary
@@ -313,18 +293,14 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
             activatorSecondary
             activatorContent={<FaChevronDown size="1.25em" />}
           >
-            {(() => {
-              if (props.gunReadinessEnabled) {
-                return (
-                  <CustomMenuOption
-                    onClick={onToggleGunReady}
-                    clicked={props.isGunReady}
-                  >
-                    Gun
-                  </CustomMenuOption>
-                );
-              }
-            })()}
+            {props.gunReadinessEnabled &&
+              <CustomMenuOption
+                onClick={onToggleGunReady}
+                clicked={props.isGunReady}
+              >
+                Gun
+              </CustomMenuOption>
+            }
             <CustomMenuOption
               onClick={onToggleEditEntry}
               clicked={isEditMode}
@@ -341,6 +317,6 @@ const InitiativeTrackerEntry: React.FC<InitiativeTrackerEntryProps> = (props) =>
       </ActionsColumn>
     </Entry>
   );
-}
+};
 
 export default InitiativeTrackerEntry;

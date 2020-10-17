@@ -1,6 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 
+interface CustomMenuOptionProps {
+  clicked?: boolean;
+  onClick: (event: React.MouseEvent<HTMLElement>) => void;
+}
+
+interface MenuItemOptionProps {
+  clicked?: boolean;
+}
+
 const MenuItem = styled.a`
   display: flex;
   align-items: center;
@@ -25,10 +34,6 @@ const MenuItem = styled.a`
     outline-offset: -3px;
   }
 `;
-
-interface MenuItemOptionProps {
-  clicked?: boolean;
-};
 
 const MenuItemOption = styled.div<MenuItemOptionProps>`
   position: relative;
@@ -62,21 +67,17 @@ const Content = styled.span`
   white-space: nowrap;
 `;
 
-interface CustomMenuOptionProps {
-  clicked?: boolean,
-  onClick: (event: React.MouseEvent<HTMLElement>) => void,
-}
-
 const CustomMenuOption: React.FC<CustomMenuOptionProps> = (props) => {
   return (
     <MenuItem
       onClick={props.onClick}
+      onMouseDown={(evt: React.MouseEvent) => evt.preventDefault()}
       href="#"
     >
       <Content>{props.children}</Content>
       <MenuItemOption clicked={props.clicked}/>
     </MenuItem>
   );
-}
+};
 
 export default CustomMenuOption;
