@@ -119,7 +119,11 @@ const InitiativeTracker: React.FC = () => {
   const sortEntries = (trackerEntries: TrackerEntry[]) => {
     if (trackerEntries.length > 0) {
       let sortedEntries = [...trackerEntries].sort((firstEntry: TrackerEntry, secondEntry: TrackerEntry) => {
-        return (secondEntry.initiative + (secondEntry.isGunReady ? isGunReadyInitiative : 0)) - (firstEntry.initiative + (firstEntry.isGunReady ? isGunReadyInitiative : 0));
+        if (gunReadinessEnabled) {
+          return (secondEntry.initiative + (secondEntry.isGunReady ? isGunReadyInitiative : 0)) - (firstEntry.initiative + (firstEntry.isGunReady ? isGunReadyInitiative : 0));
+        } else {
+          return secondEntry.initiative - firstEntry.initiative;
+        }
       });
 
       sortedEntries = sortedEntries.map((entry) => { return {...entry, marked: false};});
